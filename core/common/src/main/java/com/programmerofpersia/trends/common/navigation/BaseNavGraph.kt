@@ -7,7 +7,7 @@ abstract class BaseNavGraph(val route: String, val label: String) {
 }
 
 /* todo: change label to @StringRes */
-interface TNavGraph {
+interface TrNavGraph {
     val route: String
     val label: String
 }

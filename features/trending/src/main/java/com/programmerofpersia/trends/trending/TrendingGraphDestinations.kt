@@ -4,9 +4,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.programmerofpersia.trends.common.navigation.TNavGraph
+import com.programmerofpersia.trends.common.navigation.TrNavGraph
 
-sealed class TrendingGraphDestinations() : TNavGraph {
+sealed class TrendingGraphDestinations() : TrNavGraph {
 
     object TrendingNowGraph : TrendingGraphDestinations() {
         override val route: String
@@ -30,7 +30,7 @@ fun NavGraphBuilder.trendingGraph(navController: NavController) {
         route = TrendingGraphDestinations.TrendingNowGraph.route
     ) {
         composable(route = TrendingGraphDestinations.TrendingNowScreen.route) {
-            TrendingRoute(/*navController*/)
+            TrendingRoute(navController)
         }
     }
 }
