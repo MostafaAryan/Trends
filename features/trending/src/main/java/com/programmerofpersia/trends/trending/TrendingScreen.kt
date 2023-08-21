@@ -85,40 +85,58 @@ fun TrendingScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         state.dailyTrendsInfo?.let { dailyTrends ->
 
-            var expandedItemIndex by rememberSaveable { mutableStateOf(-1) }
+            var expandedItemKey by rememberSaveable { mutableStateOf("") }
 
             LazyColumn(content = {
+                dailyTrends.trendingSearchesDays.forEach { trendingSearchDay ->
 
-                itemsIndexed(
-                    items = dailyTrends.trendingSearchesDays[1].trendingSearches,
-                    key = { index, trendingSearchInfo -> trendingSearchInfo.shareUrl }
-                ) { index, trendingSearch ->
+                    item {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 10.dp, top = 20.dp, end = 10.dp, bottom = 5.dp),
+                            text = trendingSearchDay.formattedDate,
+                            color = Color.DarkGray,
+                            fontSize = 15.sp,
+                            textAlign = TextAlign.Start,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
 
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(all = 10.dp)
-                            .clickable {
-                                expandedItemIndex = if (expandedItemIndex == index) -1 else index
-                            },
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                    ) {
-                        Column(
+                    itemsIndexed(
+                        items = trendingSearchDay.trendingSearches,
+                        key = { index, trendingSearch -> trendingSearch.shareUrl }
+                    ) { index, trendingSearch ->
+
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .animateContentSize()
-
+                                .padding(all = 10.dp)
+                                .clickable {
+                                    expandedItemKey =
+                                        if (expandedItemKey == trendingSearch.shareUrl) "" else trendingSearch.shareUrl
+                                },
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
-                            ItemCardVisibleContent(trendingSearch)
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight()
+                                    .animateContentSize()
 
-                            AnimatedVisibility(index == expandedItemIndex) {
-                                ItemCardExpandableContent(trendingSearch)
+                            ) {
+                                ItemCardVisibleContent(trendingSearch)
+
+                                AnimatedVisibility(trendingSearch.shareUrl == expandedItemKey) {
+                                    ItemCardExpandableContent(trendingSearch)
+                                }
+
                             }
-
                         }
                     }
+
                 }
             })
 
