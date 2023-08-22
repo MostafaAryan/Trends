@@ -50,9 +50,10 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.programmerofpersia.trends.common.ui.ClickableChipGroup
 import com.programmerofpersia.trends.common.ui.TrItemPickerAlertDialog
-import com.programmerofpersia.trends.common.ui.TrItemPickerItem
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.collectAsEffect
+import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItemList
+import com.programmerofpersia.trends.data.domain.TrendsLocation
 import com.programmerofpersia.trends.data.domain.model.ArticleInfo
 import com.programmerofpersia.trends.data.domain.model.TrendingSearchInfo
 import kotlinx.coroutines.flow.SharedFlow
@@ -160,6 +161,25 @@ fun TrendingScreen(
         if (state.isLoading) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
+
+        val context = LocalContext.current
+        if (showCountrySelectionDialog) {
+            TrItemPickerAlertDialog(
+                onDismissRequest = { showCountrySelectionDialog = false },
+                title = "Select country",
+                itemList = TrendsLocation.getTrendsLocationList().toItemPickerItemList(),
+                onConfirmButtonClicked = { selectedItem ->
+                    // todo : save selected item in local
+                    Toast.makeText(
+                        context,
+                        "${selectedItem.id}:${selectedItem.title}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    showCountrySelectionDialog = false
+                }
+            )
+        }
+
     }
 
 }
