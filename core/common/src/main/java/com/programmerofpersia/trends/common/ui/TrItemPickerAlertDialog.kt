@@ -63,6 +63,7 @@ fun TrItemPickerAlertDialog(
                 Column(
                     modifier = Modifier
                         .verticalScroll(rememberScrollState())
+                        .fillMaxWidth()
                         .weight(1f, false)
                 ) {
                     itemList.forEach { item ->
