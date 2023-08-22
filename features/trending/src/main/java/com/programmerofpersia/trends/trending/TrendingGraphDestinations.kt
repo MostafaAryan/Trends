@@ -5,6 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.programmerofpersia.trends.common.navigation.TrNavGraph
+import com.programmerofpersia.trends.common.navigation.TrNavScreen
+import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
+import com.programmerofpersia.trends.common.ui.TrTopAppBarState
+import kotlinx.coroutines.flow.SharedFlow
 
 sealed class TrendingGraphDestinations() : TrNavGraph {
 
@@ -15,22 +19,33 @@ sealed class TrendingGraphDestinations() : TrNavGraph {
             get() = "Trending now"
     }
 
-    object TrendingNowScreen : TrendingGraphDestinations() {
+    object TrendingNowScreen : TrendingGraphDestinations(), TrNavScreen {
         override val route: String
             get() = "trending-now-screen"
         override val label: String
             get() = "Trending now"
+        override val topAppBarState: TrTopAppBarState
+            get() = TrTopAppBarState(title = "Daily search trends", endIcon = "L")
     }
 
 }
 
-fun NavGraphBuilder.trendingGraph(navController: NavController) {
+fun NavGraphBuilder.trendingGraph(
+    navController: NavController,
+    onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
+    setTopAppBarState: (TrTopAppBarState) -> Unit,
+) {
     navigation(
         startDestination = TrendingGraphDestinations.TrendingNowScreen.route,
         route = TrendingGraphDestinations.TrendingNowGraph.route
     ) {
+
         composable(route = TrendingGraphDestinations.TrendingNowScreen.route) {
-            TrendingRoute(navController)
+            setTopAppBarState(TrendingGraphDestinations.TrendingNowScreen.topAppBarState)
+            TrendingRoute(
+                navController = navController,
+                onTopAppBarAction = onTopAppBarAction,
+            )
         }
     }
 }

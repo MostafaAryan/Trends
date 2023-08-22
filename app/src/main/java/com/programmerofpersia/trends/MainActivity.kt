@@ -3,6 +3,7 @@ package com.programmerofpersia.trends
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -12,21 +13,32 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.programmerofpersia.trends.common.ui.TrTopAppBar
+import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
+import com.programmerofpersia.trends.common.ui.TrTopAppBarState
 import com.programmerofpersia.trends.explore.ExploreGraphDestinations
 import com.programmerofpersia.trends.explore.exploreGraph
 import com.programmerofpersia.trends.trending.TrendingGraphDestinations
 import com.programmerofpersia.trends.trending.trendingGraph
 import com.programmerofpersia.trends.ui.theme.TrendsTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -53,10 +65,29 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigation() {
+    val coroutineScope = rememberCoroutineScope()
+
     val navController = rememberNavController()
-    val navBarItems = listOf(TrendingGraphDestinations.TrendingNowGraph, ExploreGraphDestinations.ExploreGraph)
+    val navBarItems =
+        listOf(TrendingGraphDestinations.TrendingNowGraph, ExploreGraphDestinations.ExploreGraph)
+
+    var topAppBarState by remember { mutableStateOf(TrTopAppBarState.Hidden) }
+    val onTopAppBarAction = MutableSharedFlow<TrTopAppBarActions>()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            AnimatedVisibility(topAppBarState.isVisible) {
+                TrTopAppBar(
+                    state = topAppBarState,
+                    onEndIconClick = {
+                        coroutineScope.launch { onTopAppBarAction.emit(TrTopAppBarActions.EndIconClicked) }
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+            }
+        },
         bottomBar = {
             NavigationBar {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -92,7 +123,7 @@ fun Navigation() {
             startDestination = TrendingGraphDestinations.TrendingNowGraph.route,
             Modifier.padding(innerPadding)
         ) {
-            trendingGraph(navController)
+            trendingGraph(navController, onTopAppBarAction) { topAppBarState = it }
             exploreGraph(navController)
         }
     }

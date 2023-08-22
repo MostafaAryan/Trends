@@ -49,14 +49,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.programmerofpersia.trends.common.ui.ClickableChipGroup
+import com.programmerofpersia.trends.common.ui.TrItemPickerAlertDialog
+import com.programmerofpersia.trends.common.ui.TrItemPickerItem
+import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
+import com.programmerofpersia.trends.common.ui.collectAsEffect
 import com.programmerofpersia.trends.data.domain.model.ArticleInfo
 import com.programmerofpersia.trends.data.domain.model.TrendingSearchInfo
+import kotlinx.coroutines.flow.SharedFlow
 
 
 @Composable
 fun TrendingRoute(
     navController: NavController,
-    viewModel: TrendingViewModel = hiltViewModel()
+    viewModel: TrendingViewModel = hiltViewModel(),
+    onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
 ) {
 
     println("trending-c-log: TrendingRoute recomposition")
@@ -69,7 +75,8 @@ fun TrendingRoute(
     TrendingScreen(
         navController,
         viewModel::loadDailyTrends,
-        viewModel.state
+        viewModel.state,
+        onTopAppBarAction
     )
 
 }
@@ -78,9 +85,18 @@ fun TrendingRoute(
 fun TrendingScreen(
     navController: NavController,
     loadDailyTrends: () -> Unit,
-    state: TrendingState
+    state: TrendingState,
+    onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
 ) {
     println("trending-c-log: TrendingScreen recomposition")
+
+    var showCountrySelectionDialog by remember { mutableStateOf(false) }
+    onTopAppBarAction.collectAsEffect {
+        when (it) {
+            TrTopAppBarActions.EndIconClicked -> showCountrySelectionDialog = true
+            else -> {}
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         state.dailyTrendsInfo?.let { dailyTrends ->
