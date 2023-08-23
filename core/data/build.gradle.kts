@@ -58,6 +58,9 @@ dependencies {
     // coroutines and flow
     implementation(libs.kotlinx.coroutines.android)
 
+    //
+    implementation(libs.datastore.preferences)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

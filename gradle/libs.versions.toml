@@ -21,6 +21,7 @@ kotlinx-serialization = "1.5.1"
 kotlinx-coroutines = "1.6.4"
 constraintlayout-compose = "1.0.1"
 coil = "2.4.0"
+datastore="1.0.0"
 
 
 [libraries]
@@ -52,6 +53,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose" }
 ui-unit = { group = "androidx.compose.ui", name = "ui-unit"}
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 
 
 [plugins]
