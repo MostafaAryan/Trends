@@ -51,10 +51,11 @@ fun TrItemPickerAlertDialog(
 
         val selectedItem = remember { mutableStateOf(initialSelectedItem ?: itemList[0]) }
         var selectedItemPositionOnScreen by remember { mutableStateOf(0F) }
+        var selectedItemHeight by remember { mutableStateOf(0) }
         val scrollState = rememberScrollState()
 
         LaunchedEffect(key1 = Unit) {
-            scrollState.animateScrollTo(selectedItemPositionOnScreen.roundToInt())
+            scrollState.animateScrollTo(selectedItemPositionOnScreen.roundToInt() - (2 * selectedItemHeight))
         }
 
         Box(
@@ -95,6 +96,7 @@ fun TrItemPickerAlertDialog(
                                         onGloballyPositioned { coordinates ->
                                             selectedItemPositionOnScreen =
                                                 coordinates.positionInRoot().y
+                                            selectedItemHeight = coordinates.size.height
                                         }
                                     },
                                 selected = selectedItem.value.id == item.id,
