@@ -5,7 +5,7 @@ data class TrendingSearchInfo(
     val title: String,
     val formattedTraffic: String,
     val relatedQueries: List<QueryInfo>,
-    val image: ImageInfo,
+    val image: ImageInfo? = null,
     val articles: List<ArticleInfo>,
     val shareUrl: String,
 )

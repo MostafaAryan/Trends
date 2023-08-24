@@ -7,9 +7,9 @@ import kotlinx.serialization.json.JsonNames
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class ImageDto(
-    val newsUrl: String,
-    val source: String,
+    val newsUrl: String? = null,
+    val source: String? = null,
     @JsonNames("imgUrl")
-    val imageUrl: String,
+    val imageUrl: String? = null,
 ) {
 }

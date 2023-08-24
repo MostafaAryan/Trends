@@ -7,3 +7,5 @@ import com.programmerofpersia.trends.data.domain.TrendsLocation
 fun List<TrendsLocation>.toItemPickerItemList(): List<TrItemPickerItem> = map { trendsLocation ->
     TrItemPickerItem(trendsLocation.id, trendsLocation.name)
 }
+
+fun TrendsLocation.toItemPickerItem(): TrItemPickerItem = TrItemPickerItem(id, name)

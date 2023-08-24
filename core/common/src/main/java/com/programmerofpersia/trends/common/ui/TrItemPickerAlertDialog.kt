@@ -14,17 +14,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import kotlin.math.roundToInt
 
 
 data class TrItemPickerItem(val id: String, val title: String)
@@ -34,13 +40,22 @@ fun TrItemPickerAlertDialog(
     onDismissRequest: () -> Unit,
     title: String,
     itemList: List<TrItemPickerItem>,
+    initialSelectedItem: TrItemPickerItem? = null,
     onConfirmButtonClicked: (TrItemPickerItem) -> Unit
 ) {
+    if (itemList.isEmpty()) return
+
     Dialog(
         onDismissRequest = onDismissRequest
     ) {
-        // todo : change default value (should be provided)
-        val selectedItem = remember { mutableStateOf(itemList[0]) }
+
+        val selectedItem = remember { mutableStateOf(initialSelectedItem ?: itemList[0]) }
+        var selectedItemPositionOnScreen by remember { mutableStateOf(0F) }
+        val scrollState = rememberScrollState()
+
+        LaunchedEffect(key1 = Unit) {
+            scrollState.animateScrollTo(selectedItemPositionOnScreen.roundToInt())
+        }
 
         Box(
             modifier = Modifier
@@ -62,7 +77,7 @@ fun TrItemPickerAlertDialog(
 
                 Column(
                     modifier = Modifier
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(scrollState)
                         .fillMaxWidth()
                         .weight(1f, false)
                 ) {
@@ -75,6 +90,13 @@ fun TrItemPickerAlertDialog(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
+                                modifier = Modifier
+                                    .conditional(selectedItem.value.id == item.id) {
+                                        onGloballyPositioned { coordinates ->
+                                            selectedItemPositionOnScreen =
+                                                coordinates.positionInRoot().y
+                                        }
+                                    },
                                 selected = selectedItem.value.id == item.id,
                                 onClick = { selectedItem.value = item }
                             )

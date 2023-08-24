@@ -30,16 +30,21 @@ fun DefaultDailyTrendsDto.toDailyTrendsInfo(): DailyTrendsInfo {
                                     it.exploreLink
                                 )
                             },
-                            ImageInfo(
-                                image.imageUrl,
-                                image.source
-                            ),
+                            image = if (!image?.imageUrl.isNullOrEmpty())
+                                ImageInfo(
+                                    image!!.imageUrl!!,
+                                    image.source ?: ""
+                                ) else null,
                             articles.map {
                                 it.run {
                                     ArticleInfo(
                                         title.fromHtml(),
                                         timeAgo,
-                                        image?.run { ImageInfo(imageUrl, source) },
+                                        image = if (!image?.imageUrl.isNullOrEmpty())
+                                            ImageInfo(
+                                                image!!.imageUrl!!,
+                                                image.source ?: ""
+                                            ) else null,
                                         url,
                                         source,
                                         snippet

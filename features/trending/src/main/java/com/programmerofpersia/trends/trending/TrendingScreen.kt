@@ -49,9 +49,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.programmerofpersia.trends.common.ui.ClickableChipGroup
+import com.programmerofpersia.trends.common.ui.CollectAsEffect
 import com.programmerofpersia.trends.common.ui.TrItemPickerAlertDialog
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
-import com.programmerofpersia.trends.common.ui.collectAsEffect
+import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItem
 import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItemList
 import com.programmerofpersia.trends.data.domain.TrendsLocation
 import com.programmerofpersia.trends.data.domain.model.ArticleInfo
@@ -66,16 +67,16 @@ fun TrendingRoute(
     onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
 ) {
 
-    println("trending-c-log: TrendingRoute recomposition")
-
     LaunchedEffect(key1 = true) {
-        viewModel.loadDailyTrends()
-        println("trending-c-log: LaunchedEffect recomposition")
+        viewModel.retrieveSelectedLocation()
+        viewModel.handleLocationChanges()
     }
 
     TrendingScreen(
         navController,
-        viewModel::loadDailyTrends,
+        viewModel.countryList,
+        viewModel.selectedCountry,
+        viewModel::updateSelectedLocationId,
         viewModel.state,
         onTopAppBarAction
     )
@@ -85,14 +86,16 @@ fun TrendingRoute(
 @Composable
 fun TrendingScreen(
     navController: NavController,
-    loadDailyTrends: () -> Unit,
+    countryList: List<TrendsLocation>,
+    selectedCountry: TrendsLocation?,
+    updateSelectedLocationId: (String) -> Unit,
     state: TrendingState,
     onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
 ) {
     println("trending-c-log: TrendingScreen recomposition")
 
     var showCountrySelectionDialog by remember { mutableStateOf(false) }
-    onTopAppBarAction.collectAsEffect {
+    onTopAppBarAction.CollectAsEffect {
         when (it) {
             TrTopAppBarActions.EndIconClicked -> showCountrySelectionDialog = true
             else -> {}
@@ -167,12 +170,13 @@ fun TrendingScreen(
             TrItemPickerAlertDialog(
                 onDismissRequest = { showCountrySelectionDialog = false },
                 title = "Select country",
-                itemList = TrendsLocation.getTrendsLocationList().toItemPickerItemList(),
+                itemList = countryList.toItemPickerItemList(),
+                initialSelectedItem = selectedCountry?.toItemPickerItem(),
                 onConfirmButtonClicked = { selectedItem ->
-                    // todo : save selected item in local
+                    updateSelectedLocationId(selectedItem.id)
                     Toast.makeText(
                         context,
-                        "${selectedItem.id}:${selectedItem.title}",
+                        "${selectedItem.title} is selected.",
                         Toast.LENGTH_SHORT
                     ).show()
                     showCountrySelectionDialog = false
@@ -229,7 +233,7 @@ fun ItemCardVisibleContent(
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 AsyncImage(
-                    model = trendingSearch.image.url,
+                    model = trendingSearch.image?.url ?: "",
                     contentDescription = trendingSearch.title,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -254,7 +258,7 @@ fun ItemCardVisibleContent(
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 1.dp),
-                        text = trendingSearch.image.source,
+                        text = trendingSearch.image?.source ?: "",
                         color = Color.White,
                         fontSize = 5.sp,
                         textAlign = TextAlign.Center,

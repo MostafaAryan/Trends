@@ -7,7 +7,7 @@ data class TrendingSearchDto(
     val title: TrendingSearchTitleDto,
     val formattedTraffic: String,
     val relatedQueries: List<RelatedQueriesDto>,
-    val image: ImageDto,
+    val image: ImageDto? = null,
     val articles: List<ArticleDto>,
     val shareUrl: String,
 ) {
