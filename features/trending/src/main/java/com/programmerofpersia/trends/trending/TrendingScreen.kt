@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -108,8 +109,26 @@ fun TrendingScreen(
             var expandedItemKey by rememberSaveable { mutableStateOf("") }
 
             LazyColumn(content = {
+
+                /* Displays selected country name at the beginning of the list. */
+                if (!selectedCountry?.name.isNullOrEmpty()) {
+                    item {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 10.dp, top = 10.dp, end = 10.dp),
+                            text = "${selectedCountry?.name ?: ""}:",
+                            color = Color.DarkGray,
+                            fontSize = 15.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
+
                 dailyTrends.trendingSearchesDays.forEach { trendingSearchDay ->
 
+                    /* Displays date. */
                     item {
                         Text(
                             modifier = Modifier
@@ -124,6 +143,7 @@ fun TrendingScreen(
                         )
                     }
 
+                    /* Displays trending search items. */
                     itemsIndexed(
                         items = trendingSearchDay.trendingSearches,
                         key = { index, trendingSearch -> trendingSearch.shareUrl }
