@@ -3,6 +3,7 @@ package com.programmerofpersia.trends.common.ui
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -12,8 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.programmerofpersia.trends.common.ui.theme.spacing
 
 sealed class TrTopAppBarActions {
     object EndIconClicked : TrTopAppBarActions()
@@ -53,7 +54,10 @@ fun TrTopAppBar(
         actions = {
             ClickableText(
                 text = AnnotatedString(state.endIcon ?: ""),
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.spacing.small,
+                    vertical = MaterialTheme.spacing.xSmall
+                ),
                 onClick = { onEndIconClick() })
         },
         scrollBehavior = scrollBehavior

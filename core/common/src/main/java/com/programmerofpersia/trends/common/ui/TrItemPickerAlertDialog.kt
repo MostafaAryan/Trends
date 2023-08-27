@@ -27,9 +27,9 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.programmerofpersia.trends.common.ui.theme.spacing
 import kotlin.math.roundToInt
 
 
@@ -62,14 +62,14 @@ fun TrItemPickerAlertDialog(
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.background)
-                .padding(all = 10.dp)
+                .padding(all = MaterialTheme.spacing.small)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
                 Text(
-                    modifier = Modifier.padding(all = 10.dp),
+                    modifier = Modifier.padding(all = MaterialTheme.spacing.small),
                     text = title,
                     color = Color.Black,
                     fontSize = 20.sp,
@@ -103,7 +103,7 @@ fun TrItemPickerAlertDialog(
                                 onClick = { selectedItem.value = item }
                             )
                             Text(
-                                modifier = Modifier.padding(all = 5.dp),
+                                modifier = Modifier.padding(all = MaterialTheme.spacing.xSmall),
                                 text = item.title
                             )
                         }
@@ -113,7 +113,7 @@ fun TrItemPickerAlertDialog(
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 5.dp),
+                        .padding(top = MaterialTheme.spacing.xSmall),
                     onClick = { onConfirmButtonClicked(selectedItem.value) }
                 ) {
                     Text(

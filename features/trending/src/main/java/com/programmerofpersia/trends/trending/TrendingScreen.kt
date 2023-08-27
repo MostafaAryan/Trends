@@ -55,6 +55,7 @@ import com.programmerofpersia.trends.common.ui.TrItemPickerAlertDialog
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItem
 import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItemList
+import com.programmerofpersia.trends.common.ui.theme.spacing
 import com.programmerofpersia.trends.data.domain.TrendsLocation
 import com.programmerofpersia.trends.data.domain.model.ArticleInfo
 import com.programmerofpersia.trends.data.domain.model.TrendingSearchInfo
@@ -116,7 +117,11 @@ fun TrendingScreen(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 10.dp, top = 10.dp, end = 10.dp),
+                                .padding(
+                                    start = MaterialTheme.spacing.small,
+                                    top = MaterialTheme.spacing.small,
+                                    end = MaterialTheme.spacing.small
+                                ),
                             text = "${selectedCountry?.name ?: ""}:",
                             color = Color.DarkGray,
                             fontSize = 15.sp,
@@ -133,7 +138,12 @@ fun TrendingScreen(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 10.dp, top = 20.dp, end = 10.dp, bottom = 5.dp),
+                                .padding(
+                                    start = MaterialTheme.spacing.small,
+                                    top = MaterialTheme.spacing.large,
+                                    end = MaterialTheme.spacing.small,
+                                    bottom = MaterialTheme.spacing.xSmall
+                                ),
                             text = trendingSearchDay.formattedDate,
                             color = Color.DarkGray,
                             fontSize = 15.sp,
@@ -153,7 +163,7 @@ fun TrendingScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .padding(all = 10.dp)
+                                .padding(all = MaterialTheme.spacing.small)
                                 .clickable {
                                     expandedItemKey =
                                         if (expandedItemKey == trendingSearch.shareUrl) "" else trendingSearch.shareUrl
@@ -216,16 +226,18 @@ fun ItemCardVisibleContent(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(all = 10.dp)
+            .padding(all = MaterialTheme.spacing.small)
     ) {
         val (title, traffic, imageBox) = createRefs()
         createVerticalChain(title, traffic, chainStyle = ChainStyle.Packed)
+
+        val mediumSpacing = MaterialTheme.spacing.medium
 
         Text(
             text = trendingSearch.title,
             modifier = Modifier.constrainAs(title) {
                 start.linkTo(parent.start)
-                end.linkTo(imageBox.start, margin = 15.dp)
+                end.linkTo(imageBox.start, margin = mediumSpacing)
                 top.linkTo(parent.top)
                 bottom.linkTo(traffic.top)
                 width = Dimension.fillToConstraints
@@ -302,7 +314,11 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+            .padding(
+                start = MaterialTheme.spacing.small,
+                end = MaterialTheme.spacing.small,
+                bottom = MaterialTheme.spacing.small
+            )
             .onGloballyPositioned { coordinates ->
                 parentSize = coordinates.size.toSize()
             }
@@ -314,7 +330,7 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
             Text(
                 text = "Related Queries",
                 fontSize = 15.sp, /* todo */
-                modifier = Modifier.padding(vertical = 10.dp)
+                modifier = Modifier.padding(vertical = MaterialTheme.spacing.small)
             )
             ClickableChipGroup(
                 chipList = trendingSearch.relatedQueries,
@@ -331,7 +347,7 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
                         Toast.LENGTH_SHORT
                     ).show()
                 },
-                modifier = Modifier.padding(bottom = 10.dp)
+                modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
             )
         }
 
@@ -340,7 +356,7 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
             Text(
                 text = "Related News",
                 fontSize = 15.sp, /* todo */
-                modifier = Modifier.padding(vertical = 10.dp)
+                modifier = Modifier.padding(vertical = MaterialTheme.spacing.small)
             )
             LazyRow {
                 itemsIndexed(
@@ -365,7 +381,7 @@ fun ArticleItem(
         modifier = Modifier
             .width(width = with(LocalDensity.current) { parentSize.width.toDp() } - 30.dp)
             .height(90.dp)
-            .padding(end = 10.dp),
+            .padding(end = MaterialTheme.spacing.small),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         ConstraintLayout(
@@ -374,6 +390,8 @@ fun ArticleItem(
         ) {
             val (articleTitle, articleSource, articleImage) = createRefs()
             createVerticalChain(articleTitle, articleSource, chainStyle = ChainStyle.Packed)
+
+            val smallSpacing = MaterialTheme.spacing.small
 
             Box(
                 modifier = Modifier
@@ -396,8 +414,8 @@ fun ArticleItem(
             Text(
                 text = article.title,
                 modifier = Modifier.constrainAs(articleTitle) {
-                    start.linkTo(articleImage.end, margin = 10.dp)
-                    end.linkTo(parent.end, margin = 10.dp)
+                    start.linkTo(articleImage.end, margin = smallSpacing)
+                    end.linkTo(parent.end, margin = smallSpacing)
                     top.linkTo(parent.top)
                     bottom.linkTo(articleSource.top)
                     width = Dimension.fillToConstraints
@@ -413,8 +431,8 @@ fun ArticleItem(
                 modifier = Modifier
                     .padding(top = 2.dp)
                     .constrainAs(articleSource) {
-                        start.linkTo(articleImage.end, margin = 10.dp)
-                        end.linkTo(parent.end, margin = 10.dp)
+                        start.linkTo(articleImage.end, margin = smallSpacing)
+                        end.linkTo(parent.end, margin = smallSpacing)
                         top.linkTo(articleTitle.bottom)
                         bottom.linkTo(parent.bottom)
                         width = Dimension.fillToConstraints
