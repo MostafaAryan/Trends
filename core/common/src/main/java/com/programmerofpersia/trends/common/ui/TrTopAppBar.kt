@@ -55,8 +55,8 @@ fun TrTopAppBar(
             ClickableText(
                 text = AnnotatedString(state.endIcon ?: ""),
                 modifier = Modifier.padding(
-                    horizontal = MaterialTheme.spacing.small,
-                    vertical = MaterialTheme.spacing.xSmall
+                    horizontal = MaterialTheme.spacing.grid_2,
+                    vertical = MaterialTheme.spacing.grid_1
                 ),
                 onClick = { onEndIconClick() })
         },

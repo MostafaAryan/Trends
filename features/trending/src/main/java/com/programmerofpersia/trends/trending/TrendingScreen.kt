@@ -118,9 +118,9 @@ fun TrendingScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
-                                    start = MaterialTheme.spacing.small,
-                                    top = MaterialTheme.spacing.small,
-                                    end = MaterialTheme.spacing.small
+                                    start = MaterialTheme.spacing.grid_2,
+                                    top = MaterialTheme.spacing.grid_2,
+                                    end = MaterialTheme.spacing.grid_2
                                 ),
                             text = "${selectedCountry?.name ?: ""}:",
                             color = Color.DarkGray,
@@ -139,10 +139,10 @@ fun TrendingScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
-                                    start = MaterialTheme.spacing.small,
-                                    top = MaterialTheme.spacing.large,
-                                    end = MaterialTheme.spacing.small,
-                                    bottom = MaterialTheme.spacing.xSmall
+                                    start = MaterialTheme.spacing.grid_2,
+                                    top = MaterialTheme.spacing.grid_3,
+                                    end = MaterialTheme.spacing.grid_2,
+                                    bottom = MaterialTheme.spacing.grid_1
                                 ),
                             text = trendingSearchDay.formattedDate,
                             color = Color.DarkGray,
@@ -163,7 +163,7 @@ fun TrendingScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .padding(all = MaterialTheme.spacing.small)
+                                .padding(all = MaterialTheme.spacing.grid_2)
                                 .clickable {
                                     expandedItemKey =
                                         if (expandedItemKey == trendingSearch.shareUrl) "" else trendingSearch.shareUrl
@@ -226,12 +226,12 @@ fun ItemCardVisibleContent(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(all = MaterialTheme.spacing.small)
+            .padding(all = MaterialTheme.spacing.grid_2)
     ) {
         val (title, traffic, imageBox) = createRefs()
         createVerticalChain(title, traffic, chainStyle = ChainStyle.Packed)
 
-        val mediumSpacing = MaterialTheme.spacing.medium
+        val mediumSpacing = MaterialTheme.spacing.grid_2_5
 
         Text(
             text = trendingSearch.title,
@@ -315,9 +315,9 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(
-                start = MaterialTheme.spacing.small,
-                end = MaterialTheme.spacing.small,
-                bottom = MaterialTheme.spacing.small
+                start = MaterialTheme.spacing.grid_2,
+                end = MaterialTheme.spacing.grid_2,
+                bottom = MaterialTheme.spacing.grid_2
             )
             .onGloballyPositioned { coordinates ->
                 parentSize = coordinates.size.toSize()
@@ -330,7 +330,7 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
             Text(
                 text = "Related Queries",
                 fontSize = 15.sp, /* todo */
-                modifier = Modifier.padding(vertical = MaterialTheme.spacing.small)
+                modifier = Modifier.padding(vertical = MaterialTheme.spacing.grid_2)
             )
             ClickableChipGroup(
                 chipList = trendingSearch.relatedQueries,
@@ -347,7 +347,7 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
                         Toast.LENGTH_SHORT
                     ).show()
                 },
-                modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
+                modifier = Modifier.padding(bottom = MaterialTheme.spacing.grid_2)
             )
         }
 
@@ -356,7 +356,7 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
             Text(
                 text = "Related News",
                 fontSize = 15.sp, /* todo */
-                modifier = Modifier.padding(vertical = MaterialTheme.spacing.small)
+                modifier = Modifier.padding(vertical = MaterialTheme.spacing.grid_2)
             )
             LazyRow {
                 itemsIndexed(
@@ -381,7 +381,7 @@ fun ArticleItem(
         modifier = Modifier
             .width(width = with(LocalDensity.current) { parentSize.width.toDp() } - 30.dp)
             .height(90.dp)
-            .padding(end = MaterialTheme.spacing.small),
+            .padding(end = MaterialTheme.spacing.grid_2),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         ConstraintLayout(
@@ -391,7 +391,7 @@ fun ArticleItem(
             val (articleTitle, articleSource, articleImage) = createRefs()
             createVerticalChain(articleTitle, articleSource, chainStyle = ChainStyle.Packed)
 
-            val smallSpacing = MaterialTheme.spacing.small
+            val smallSpacing = MaterialTheme.spacing.grid_2
 
             Box(
                 modifier = Modifier

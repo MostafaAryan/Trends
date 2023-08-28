@@ -62,14 +62,14 @@ fun TrItemPickerAlertDialog(
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.background)
-                .padding(all = MaterialTheme.spacing.small)
+                .padding(all = MaterialTheme.spacing.grid_2)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
                 Text(
-                    modifier = Modifier.padding(all = MaterialTheme.spacing.small),
+                    modifier = Modifier.padding(all = MaterialTheme.spacing.grid_2),
                     text = title,
                     color = Color.Black,
                     fontSize = 20.sp,
@@ -103,7 +103,7 @@ fun TrItemPickerAlertDialog(
                                 onClick = { selectedItem.value = item }
                             )
                             Text(
-                                modifier = Modifier.padding(all = MaterialTheme.spacing.xSmall),
+                                modifier = Modifier.padding(all = MaterialTheme.spacing.grid_1),
                                 text = item.title
                             )
                         }
@@ -113,7 +113,7 @@ fun TrItemPickerAlertDialog(
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = MaterialTheme.spacing.xSmall),
+                        .padding(top = MaterialTheme.spacing.grid_1),
                     onClick = { onConfirmButtonClicked(selectedItem.value) }
                 ) {
                     Text(

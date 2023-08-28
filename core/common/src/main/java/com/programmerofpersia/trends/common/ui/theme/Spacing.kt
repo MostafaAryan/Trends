@@ -10,10 +10,10 @@ import androidx.compose.ui.unit.dp
 
 data class Spacing(
     val default: Dp = 0.dp,
-    val xSmall: Dp = 5.dp,
-    val small: Dp = 10.dp,
-    val medium: Dp = 15.dp,
-    val large: Dp = 20.dp
+    val grid_1: Dp = 5.dp,
+    val grid_2: Dp = 10.dp,
+    val grid_2_5: Dp = 15.dp,
+    val grid_3: Dp = 20.dp
 )
 
 val LocalSpacing = compositionLocalOf { Spacing() }
