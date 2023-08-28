@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Country selection dialog   -->
+    <string name="title_select">Select country</string>
+    <string name="toast_selected">%1$s is selected.</string>
+
+    <!-- Item card -->
+    <string name="label_traffic">%1$s searches</string>
+    <string name="label_related_queries">Related Queries</string>
+    <string name="label_related_news">Related News</string>
+
+</resources>

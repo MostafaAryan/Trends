@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -195,18 +196,18 @@ fun TrendingScreen(
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
 
-        val context = LocalContext.current
         if (showCountrySelectionDialog) {
+            val context = LocalContext.current
             TrItemPickerAlertDialog(
                 onDismissRequest = { showCountrySelectionDialog = false },
-                title = "Select country",
+                title = stringResource(R.string.title_select),
                 itemList = countryList.toItemPickerItemList(),
                 initialSelectedItem = selectedCountry?.toItemPickerItem(),
                 onConfirmButtonClicked = { selectedItem ->
                     updateSelectedLocationId(selectedItem.id)
                     Toast.makeText(
                         context,
-                        "${selectedItem.title} is selected.",
+                        context.getString(R.string.toast_selected, selectedItem.title),
                         Toast.LENGTH_SHORT
                     ).show()
                     showCountrySelectionDialog = false
@@ -245,7 +246,7 @@ fun ItemCardVisibleContent(
             fontSize = 20.sp,
         )
         Text(
-            text = "${trendingSearch.formattedTraffic} searches",
+            text = stringResource(R.string.label_traffic, trendingSearch.formattedTraffic),
             modifier = Modifier.constrainAs(traffic) {
                 start.linkTo(parent.start)
                 top.linkTo(title.bottom)
@@ -328,7 +329,7 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
         if (trendingSearch.relatedQueries.isNotEmpty()) {
             Divider(thickness = 1.dp, color = Color.LightGray)
             Text(
-                text = "Related Queries",
+                text = stringResource(id = R.string.label_related_queries),
                 fontSize = 15.sp, /* todo */
                 modifier = Modifier.padding(vertical = MaterialTheme.spacing.grid_2)
             )
@@ -354,7 +355,7 @@ fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
         if (trendingSearch.articles.isNotEmpty()) {
             Divider(thickness = 1.dp, color = Color.LightGray)
             Text(
-                text = "Related News",
+                text = stringResource(R.string.label_related_news),
                 fontSize = 15.sp, /* todo */
                 modifier = Modifier.padding(vertical = MaterialTheme.spacing.grid_2)
             )

@@ -25,10 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.programmerofpersia.trends.common.R
 import com.programmerofpersia.trends.common.ui.theme.spacing
 import kotlin.math.roundToInt
 
@@ -120,7 +122,7 @@ fun TrItemPickerAlertDialog(
                         modifier = Modifier
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        text = "Select",
+                        text = stringResource(R.string.button_select),
                         fontSize = 17.sp,
                     )
                 }
