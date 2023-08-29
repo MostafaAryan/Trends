@@ -9,12 +9,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.sp
 import com.programmerofpersia.trends.common.ui.theme.spacing
+import com.programmerofpersia.trends.common.ui.theme.trTitleLarge
 
 sealed class TrTopAppBarActions {
     object EndIconClicked : TrTopAppBarActions()
@@ -44,9 +42,8 @@ fun TrTopAppBar(
         title = {
             Text(
                 text = state.title ?: "",
-                color = Color.Black,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.trTitleLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

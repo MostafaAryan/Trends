@@ -10,10 +10,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.programmerofpersia.trends.common.ui.theme.spacing
+import com.programmerofpersia.trends.common.ui.theme.trLabelMedium
 import com.programmerofpersia.trends.data.domain.ui.ClickableChipMediator
 
 
@@ -44,17 +44,19 @@ fun ClickableChip(
     Surface(
         onClick = { onClick() },
         modifier = Modifier.padding(end = 8.dp),
-        shadowElevation = 5.dp,
-        shape = MaterialTheme.shapes.medium,
+        shadowElevation = 1.dp,
+        shape = MaterialTheme.shapes.small,
         color = MaterialTheme.colorScheme.secondary
     ) {
         Row {
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White,
-                modifier = Modifier.padding(all = 8.dp),
-                fontSize = 10.sp /* todo */
+                style = MaterialTheme.typography.trLabelMedium,
+                color = MaterialTheme.colorScheme.onSecondary,
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.spacing.grid_1,
+                    horizontal = MaterialTheme.spacing.grid_2
+                ),
             )
         }
     }

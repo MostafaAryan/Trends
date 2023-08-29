@@ -22,16 +22,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.programmerofpersia.trends.common.R
 import com.programmerofpersia.trends.common.ui.theme.spacing
+import com.programmerofpersia.trends.common.ui.theme.trLabelXLarge
+import com.programmerofpersia.trends.common.ui.theme.trTitleLarge
 import kotlin.math.roundToInt
 
 
@@ -73,9 +72,8 @@ fun TrItemPickerAlertDialog(
                 Text(
                     modifier = Modifier.padding(all = MaterialTheme.spacing.grid_2),
                     text = title,
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.trTitleLarge,
+                    color = MaterialTheme.colorScheme.primary,
                 )
 
                 Column(
@@ -106,7 +104,8 @@ fun TrItemPickerAlertDialog(
                             )
                             Text(
                                 modifier = Modifier.padding(all = MaterialTheme.spacing.grid_1),
-                                text = item.title
+                                text = item.title,
+                                style = MaterialTheme.typography.trLabelXLarge
                             )
                         }
                     }
@@ -123,7 +122,7 @@ fun TrItemPickerAlertDialog(
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         text = stringResource(R.string.button_select),
-                        fontSize = 17.sp,
+                        style = MaterialTheme.typography.trLabelXLarge
                     )
                 }
 

@@ -23,6 +23,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.programmerofpersia.trends.common.ui.theme.spacing
+import com.programmerofpersia.trends.common.ui.theme.trBodyMedium
+import com.programmerofpersia.trends.common.ui.theme.trBodySmall
 import com.programmerofpersia.trends.data.domain.model.ArticleInfo
 
 
@@ -74,7 +76,7 @@ fun ArticleItem(
                     bottom.linkTo(articleSource.top)
                     width = Dimension.fillToConstraints
                 },
-                fontSize = 13.sp,
+                style = MaterialTheme.typography.trBodyMedium,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
                 lineHeight = 15.sp
@@ -91,7 +93,7 @@ fun ArticleItem(
                         bottom.linkTo(parent.bottom)
                         width = Dimension.fillToConstraints
                     },
-                fontSize = 10.sp,
+                style = MaterialTheme.typography.trBodySmall,
                 color = Color.Gray,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

@@ -36,7 +36,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,8 +56,11 @@ import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItem
 import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItemList
 import com.programmerofpersia.trends.common.ui.theme.spacing
+import com.programmerofpersia.trends.common.ui.theme.trBodySmall
+import com.programmerofpersia.trends.common.ui.theme.trBodyXLarge
+import com.programmerofpersia.trends.common.ui.theme.trTitleMedium
+import com.programmerofpersia.trends.common.ui.theme.trTitleSmall
 import com.programmerofpersia.trends.data.domain.TrendsLocation
-import com.programmerofpersia.trends.data.domain.model.ArticleInfo
 import com.programmerofpersia.trends.data.domain.model.TrendingSearchInfo
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -124,10 +126,9 @@ private fun TrendingScreen(
                                     end = MaterialTheme.spacing.grid_2
                                 ),
                             text = "${selectedCountry?.name ?: ""}:",
-                            color = Color.DarkGray,
-                            fontSize = 15.sp,
+                            style = MaterialTheme.typography.trTitleMedium,
+                            color = MaterialTheme.colorScheme.secondary,
                             textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.Medium,
                         )
                     }
                 }
@@ -141,13 +142,15 @@ private fun TrendingScreen(
                                 .fillMaxWidth()
                                 .padding(
                                     start = MaterialTheme.spacing.grid_2,
-                                    top = MaterialTheme.spacing.grid_3,
+                                    top = MaterialTheme.spacing.grid_2_5,
                                     end = MaterialTheme.spacing.grid_2,
                                     bottom = MaterialTheme.spacing.grid_1
                                 ),
                             text = trendingSearchDay.formattedDate,
-                            color = Color.DarkGray,
-                            fontSize = 15.sp,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Normal
+                            ),
+                            color = MaterialTheme.colorScheme.secondary,
                             textAlign = TextAlign.Start,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -243,7 +246,7 @@ private fun ItemCardVisibleContent(
                 bottom.linkTo(traffic.top)
                 width = Dimension.fillToConstraints
             },
-            fontSize = 20.sp,
+            style = MaterialTheme.typography.trBodyXLarge
         )
         Text(
             text = stringResource(R.string.label_traffic, trendingSearch.formattedTraffic),
@@ -252,7 +255,7 @@ private fun ItemCardVisibleContent(
                 top.linkTo(title.bottom)
                 bottom.linkTo(parent.bottom)
             },
-            fontSize = 10.sp,
+            style = MaterialTheme.typography.trBodySmall
         )
         Card(
             modifier = Modifier
@@ -330,7 +333,7 @@ private fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
             Divider(thickness = 1.dp, color = Color.LightGray)
             Text(
                 text = stringResource(id = R.string.label_related_queries),
-                fontSize = 15.sp, /* todo */
+                style = MaterialTheme.typography.trTitleSmall,
                 modifier = Modifier.padding(vertical = MaterialTheme.spacing.grid_2)
             )
             ClickableChipGroup(
@@ -356,7 +359,7 @@ private fun ItemCardExpandableContent(trendingSearch: TrendingSearchInfo) {
             Divider(thickness = 1.dp, color = Color.LightGray)
             Text(
                 text = stringResource(R.string.label_related_news),
-                fontSize = 15.sp, /* todo */
+                style = MaterialTheme.typography.trTitleSmall,
                 modifier = Modifier.padding(vertical = MaterialTheme.spacing.grid_2)
             )
             LazyRow {
