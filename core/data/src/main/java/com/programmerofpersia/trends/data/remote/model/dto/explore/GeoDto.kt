@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GeoDto(
-    private val children: List<GeoDto>?,
+    private val children: List<GeoDto>? = null,
     val name: String,
     val id: String,
 ) {
