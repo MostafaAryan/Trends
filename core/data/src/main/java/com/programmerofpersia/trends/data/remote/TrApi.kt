@@ -1,5 +1,6 @@
 package com.programmerofpersia.trends.data.remote
 
+import com.programmerofpersia.trends.data.remote.model.dto.explore.CategoryDto
 import com.programmerofpersia.trends.data.remote.model.dto.explore.GeoDto
 import com.programmerofpersia.trends.data.remote.model.response.DailyTrendsResponse
 import retrofit2.Response
@@ -17,4 +18,6 @@ interface TrApi {
     @GET("${Constants.GEO_LIST}?hl=en-US&tz=-210")
     suspend fun fetchGeoList(): Response<GeoDto>
 
+    @GET("${Constants.CATEGORY_LIST}?hl=en-US&tz=-210")
+    suspend fun fetchCategoryList(): Response<CategoryDto>
 }

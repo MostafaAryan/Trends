@@ -33,15 +33,27 @@ class ExploreViewModel @Inject constructor(
             exploreRepository.loadGeoList().onEach { response ->
                 when (response) {
                     is TrResponse.Success -> _state.update {
-                        ExploreState(
-                            geoList = response.result
-                        )
+                        ExploreState(geoList = response.result)
                     }
 
                     is TrResponse.Error -> _state.update {
-                        ExploreState(
-                            error = response.message
-                        )
+                        ExploreState(error = response.message)
+                    }
+                }
+            }.collect()
+        }
+    }
+
+    fun loadCategoryList() {
+        viewModelScope.launch {
+            exploreRepository.loadCategoryList().onEach { response ->
+                when (response) {
+                    is TrResponse.Success -> _state.update {
+                        ExploreState(categoryList = response.result)
+                    }
+
+                    is TrResponse.Error -> _state.update {
+                        ExploreState(error = response.message)
                     }
                 }
             }.collect()
