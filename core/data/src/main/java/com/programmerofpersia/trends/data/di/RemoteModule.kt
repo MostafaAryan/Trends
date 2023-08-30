@@ -37,9 +37,15 @@ object RemoteModule {
             val response = chain.proceed(chain.request())
             val bodyString = response.body?.string()
 
+            /* todo improve implementation */
             val newResponse = bodyString.run {
-                if (!isNullOrEmpty() && contains(Constants.charsInApiResponseToBeRemoved)) {
+                if (!isNullOrEmpty() && take(6).contains(Constants.charsInApiResponseToBeRemoved)) {
                     val newBody = replace(Constants.charsInApiResponseToBeRemoved, "")
+                        .toResponseBody(response.body?.contentType())
+
+                    response.newBuilder().body(newBody).build()
+                } else if (!isNullOrEmpty() && take(6).contains(Constants.charsInGeoApiResponseToBeRemoved)) {
+                    val newBody = replace(Constants.charsInGeoApiResponseToBeRemoved, "")
                         .toResponseBody(response.body?.contentType())
 
                     response.newBuilder().body(newBody).build()

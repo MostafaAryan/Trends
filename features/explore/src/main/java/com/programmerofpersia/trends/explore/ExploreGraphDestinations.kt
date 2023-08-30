@@ -5,6 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.programmerofpersia.trends.common.navigation.TrNavGraph
+import com.programmerofpersia.trends.common.navigation.TrNavScreen
+import com.programmerofpersia.trends.common.ui.TrTopAppBarState
 
 sealed class ExploreGraphDestinations() : TrNavGraph {
 
@@ -15,21 +17,27 @@ sealed class ExploreGraphDestinations() : TrNavGraph {
             get() = "Explore"
     }
 
-    object ExploreScreen : ExploreGraphDestinations() {
+    object ExploreScreen : ExploreGraphDestinations(), TrNavScreen {
         override val route: String
             get() = "explore-screen"
         override val label: String
             get() = "Explore"
+        override val topAppBarState: TrTopAppBarState
+            get() = TrTopAppBarState(title = "Explore")
     }
 }
 
-fun NavGraphBuilder.exploreGraph(navController: NavController) {
+fun NavGraphBuilder.exploreGraph(
+    navController: NavController,
+    setTopAppBarState: (TrTopAppBarState) -> Unit,
+) {
     navigation(
         startDestination = ExploreGraphDestinations.ExploreScreen.route,
         route = ExploreGraphDestinations.ExploreGraph.route
     ) {
         composable(route = ExploreGraphDestinations.ExploreScreen.route) {
-            ExploreScreen(navController = navController)
+            setTopAppBarState(ExploreGraphDestinations.ExploreScreen.topAppBarState)
+            ExploreRoute(navController = navController)
         }
     }
 }

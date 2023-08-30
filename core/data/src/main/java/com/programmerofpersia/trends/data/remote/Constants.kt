@@ -9,11 +9,13 @@ object Constants {
     /*const val DAILY_TRENDS = "$BASE_TRENDS_URL/api/dailytrends"*/
     const val DAILY_TRENDS = "api/dailytrends"
     const val REAL_TIME_TRENDS = "${BASE_TRENDS_URL}api/realtimetrends"
+    const val GEO_LIST = "${BASE_TRENDS_URL}api/explore/pickers/geo"
 
     const val USER_AGENT =
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.77 Safari/537.36"
 
     //APP
     const val charsInApiResponseToBeRemoved = ")]}',"
+    const val charsInGeoApiResponseToBeRemoved = ")]}'"
 
 }
