@@ -14,6 +14,9 @@ class TrendingRepositoryImpl(
     override val apiExecutor: ApiExecutor
 ) : TrendingRepository {
 
+    override suspend fun loadCookiesFromGoogleTrends() {
+        trApi.callGoogleTrends()
+    }
 
     override fun loadDailyTrends(location: String): Flow<TrResponse<DailyTrendsInfo>> = flow {
         emitApiResponse {

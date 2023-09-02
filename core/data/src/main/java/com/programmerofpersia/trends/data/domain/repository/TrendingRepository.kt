@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface TrendingRepository : Repository {
 
+    suspend fun loadCookiesFromGoogleTrends()
+
     fun loadDailyTrends(location: String): Flow<TrResponse<DailyTrendsInfo>>
 
 }

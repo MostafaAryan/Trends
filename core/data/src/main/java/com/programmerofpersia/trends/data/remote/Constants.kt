@@ -4,6 +4,7 @@ object Constants {
 
     // REMOTE
     const val BASE_TRENDS_URL = "https://trends.google.com/trends/"
+    const val BASE_TRENDS_API_URL = "${BASE_TRENDS_URL}api/"
     const val GENERAL_URL = "${BASE_TRENDS_URL}api/explore"
     const val AUTO_COMPLETE_URL = "${BASE_TRENDS_URL}api/autocomplete"
     /*const val DAILY_TRENDS = "$BASE_TRENDS_URL/api/dailytrends"*/

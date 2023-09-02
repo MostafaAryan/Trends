@@ -4,6 +4,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.programmerofpersia.trends.data.remote.ApiExecutor
 import com.programmerofpersia.trends.data.remote.ApiExecutorImpl
 import com.programmerofpersia.trends.data.remote.Constants
+import com.programmerofpersia.trends.data.remote.GetResponseCookiesInterceptor
+import com.programmerofpersia.trends.data.remote.SetRequestCookiesInterceptor
 import com.programmerofpersia.trends.data.remote.TrApi
 import dagger.Module
 import dagger.Provides
@@ -24,7 +26,10 @@ object RemoteModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().apply {
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(GetResponseCookiesInterceptor())
+        .addInterceptor(SetRequestCookiesInterceptor())
+        .apply {
 
         /* todo if(appconfig.isdebug) */
         addInterceptor(

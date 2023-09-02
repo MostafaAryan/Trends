@@ -73,6 +73,7 @@ fun TrendingRoute(
 ) {
 
     LaunchedEffect(key1 = true) {
+        viewModel.initializeNecessaryCookies()
         viewModel.retrieveSelectedLocation()
         viewModel.handleLocationChanges()
     }
