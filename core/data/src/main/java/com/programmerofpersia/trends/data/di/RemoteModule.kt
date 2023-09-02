@@ -27,6 +27,7 @@ object RemoteModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        /*.addInterceptor(UserAgentInterceptor(Constants.USER_AGENT))*/
         .addInterceptor(GetResponseCookiesInterceptor())
         .addInterceptor(SetRequestCookiesInterceptor())
         .apply {
