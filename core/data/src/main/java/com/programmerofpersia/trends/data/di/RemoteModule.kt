@@ -5,6 +5,7 @@ import com.programmerofpersia.trends.data.remote.ApiExecutor
 import com.programmerofpersia.trends.data.remote.ApiExecutorImpl
 import com.programmerofpersia.trends.data.remote.Constants
 import com.programmerofpersia.trends.data.remote.GetResponseCookiesInterceptor
+import com.programmerofpersia.trends.data.remote.ResponseInterceptor
 import com.programmerofpersia.trends.data.remote.SetRequestCookiesInterceptor
 import com.programmerofpersia.trends.data.remote.TrApi
 import dagger.Module
@@ -14,7 +15,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -30,38 +30,15 @@ object RemoteModule {
         /*.addInterceptor(UserAgentInterceptor(Constants.USER_AGENT))*/
         .addInterceptor(GetResponseCookiesInterceptor())
         .addInterceptor(SetRequestCookiesInterceptor())
+        .addInterceptor(ResponseInterceptor())
         .apply {
-
-        /* todo if(appconfig.isdebug) */
-        addInterceptor(
-            HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
-        )
-
-        addInterceptor { chain ->
-            val response = chain.proceed(chain.request())
-            val bodyString = response.body?.string()
-
-            /* todo improve implementation */
-            val newResponse = bodyString.run {
-                if (!isNullOrEmpty() && take(6).contains(Constants.charsInApiResponseToBeRemoved)) {
-                    val newBody = replace(Constants.charsInApiResponseToBeRemoved, "")
-                        .toResponseBody(response.body?.contentType())
-
-                    response.newBuilder().body(newBody).build()
-                } else if (!isNullOrEmpty() && take(6).contains(Constants.charsInGeoApiResponseToBeRemoved)) {
-                    val newBody = replace(Constants.charsInGeoApiResponseToBeRemoved, "")
-                        .toResponseBody(response.body?.contentType())
-
-                    response.newBuilder().body(newBody).build()
-                } else response
-            }
-
-            newResponse
-        }
-
-    }.build()
+            /* todo if(appconfig.isdebug) */
+            addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.HEADERS
+                }
+            )
+        }.build()
 
     @Provides
     @Singleton
