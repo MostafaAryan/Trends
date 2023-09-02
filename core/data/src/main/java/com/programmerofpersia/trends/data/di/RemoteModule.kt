@@ -46,7 +46,12 @@ object RemoteModule {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_TRENDS_URL)
-            .addConverterFactory(Json.asConverterFactory(contentType))
+            .addConverterFactory(
+                Json {
+                    // In order to ignore decoding some properties in a Json object:
+                    ignoreUnknownKeys = true
+                }.asConverterFactory(contentType)
+            )
             .client(okHttpClient)
             .build()
     }
