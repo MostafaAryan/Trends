@@ -7,13 +7,17 @@ class ApiExecutorImpl : ApiExecutor {
 
     override suspend fun <T> executeApi(request: suspend () -> Response<T>): TrResponse<T> {
 
-        // Invoke api request using retrofit:
-        val result = request.invoke()
+        return try {
+            // Invoke api request using retrofit:
+            val result = request.invoke()
 
-        return if (result.isSuccessful) {
-            TrResponse.Success(result.body())
-        } else {
-            TrResponse.Error("Trending:Error in api execution!")
+            if (result.isSuccessful)
+                TrResponse.Success(result.body())
+            else
+                TrResponse.Error("Trending: Error in api execution!")
+
+        } catch (e: Exception) {
+            TrResponse.Error("Trending: ${e.message}")
         }
     }
 
