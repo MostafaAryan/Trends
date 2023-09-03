@@ -49,13 +49,16 @@ fun TrTopAppBar(
             )
         },
         actions = {
-            ClickableText(
-                text = AnnotatedString(state.endIcon ?: ""),
-                modifier = Modifier.padding(
-                    horizontal = MaterialTheme.spacing.grid_2,
-                    vertical = MaterialTheme.spacing.grid_1
-                ),
-                onClick = { onEndIconClick() })
+            if (state.endIcon != null) {
+                ClickableText(
+                    text = AnnotatedString(state.endIcon),
+                    modifier = Modifier.padding(
+                        horizontal = MaterialTheme.spacing.grid_2,
+                        vertical = MaterialTheme.spacing.grid_1
+                    ),
+                    onClick = { onEndIconClick() }
+                )
+            }
         },
         scrollBehavior = scrollBehavior
     )
