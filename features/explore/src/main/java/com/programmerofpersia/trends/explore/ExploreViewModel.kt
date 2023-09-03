@@ -3,6 +3,7 @@ package com.programmerofpersia.trends.explore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programmerofpersia.trends.data.domain.repository.ExploreRepository
+import com.programmerofpersia.trends.data.remote.TrRemoteVariables
 import com.programmerofpersia.trends.data.remote.model.TrResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,5 +60,21 @@ class ExploreViewModel @Inject constructor(
             }.collect()
         }
     }
+
+    fun loadSearches() {
+        val a = TrRemoteVariables.googleCookies
+        println("trending:log: - saved cookies: $a")
+
+        viewModelScope.launch {
+            exploreRepository.loadSearches().onEach {
+                if (it is TrResponse.Success) {
+                    println("Explore viewmodel: loadsearches: ${it.result?.topicList}")
+                    println("Explore viewmodel: loadsearches: ${it.result?.queryList}")
+                }
+                val a = ""
+            }.collect()
+        }
+    }
+
 
 }

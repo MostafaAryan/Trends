@@ -14,4 +14,9 @@ interface Repository {
         emit(apiResponse)
     }
 
+    suspend fun <T> callApi(request: suspend () -> Response<T>): TrResponse<T> {
+        val apiResponse = apiExecutor.executeApi(request)
+        return apiResponse
+    }
+
 }

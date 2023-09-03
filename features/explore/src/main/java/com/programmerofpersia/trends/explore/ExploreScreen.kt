@@ -25,6 +25,7 @@ fun ExploreRoute(
     LaunchedEffect(key1 = true) {
         viewModel.loadGeoList()
         viewModel.loadCategoryList()
+        viewModel.loadSearches()
     }
 
     ExploreScreen(navController = navController)

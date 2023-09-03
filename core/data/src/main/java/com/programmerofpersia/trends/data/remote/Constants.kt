@@ -12,6 +12,8 @@ object Constants {
     const val REAL_TIME_TRENDS = "${BASE_TRENDS_URL}api/realtimetrends"
     const val GEO_LIST = "${BASE_TRENDS_URL}api/explore/pickers/geo"
     const val CATEGORY_LIST = "${BASE_TRENDS_URL}api/explore/pickers/category"
+    const val EXPLORE_DETAILS = "${BASE_TRENDS_URL}api/explore"
+    const val SEARCHED_KEYWORDS = "${BASE_TRENDS_URL}api/widgetdata/relatedsearches"
 
     const val USER_AGENT =
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.77 Safari/537.36"
