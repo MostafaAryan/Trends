@@ -8,6 +8,7 @@ import com.programmerofpersia.trends.data.remote.GetResponseCookiesInterceptor
 import com.programmerofpersia.trends.data.remote.ResponseInterceptor
 import com.programmerofpersia.trends.data.remote.SetRequestCookiesInterceptor
 import com.programmerofpersia.trends.data.remote.TrApi
+import com.programmerofpersia.trends.data.remote.UserAgentInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +28,7 @@ object RemoteModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
-        /*.addInterceptor(UserAgentInterceptor(Constants.USER_AGENT))*/
+        .addInterceptor(UserAgentInterceptor(Constants.USER_AGENT))
         .addInterceptor(GetResponseCookiesInterceptor())
         .addInterceptor(SetRequestCookiesInterceptor())
         .addInterceptor(ResponseInterceptor())
