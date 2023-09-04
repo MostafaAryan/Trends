@@ -8,4 +8,26 @@ data class ExploreState(
     val categoryList: CategoryInfo? = null,
     val isLoading: Boolean = false,
     val error: String? = null
-)
+) {
+    /*var isLoading: Boolean = false
+        set(value) {
+            if (!value
+                && ((geoList != null
+                        && categoryList != null
+                        && searchedTopicsList != null
+                        && searchedQueriesList != null) || error != null)
+            ) field = false
+            field = value
+        }*/
+}
+
+fun ExploreState.attemptHidingLoading(): ExploreState {
+    return if (
+        ((geoList != null
+                && categoryList != null
+                && searchedTopicsList != null
+                && searchedQueriesList != null) || error != null)
+    ) this.copy(
+        isLoading = false
+    ) else this
+}

@@ -34,7 +34,7 @@ class ExploreViewModel @Inject constructor(
             exploreRepository.loadGeoList().onEach { response ->
                 when (response) {
                     is TrResponse.Success -> _state.update {
-                        ExploreState(geoList = response.result)
+                        it.copy(geoList = response.result).attemptHidingLoading()
                     }
 
                     is TrResponse.Error -> _state.update {
@@ -50,7 +50,7 @@ class ExploreViewModel @Inject constructor(
             exploreRepository.loadCategoryList().onEach { response ->
                 when (response) {
                     is TrResponse.Success -> _state.update {
-                        ExploreState(categoryList = response.result)
+                        it.copy(categoryList = response.result).attemptHidingLoading()
                     }
 
                     is TrResponse.Error -> _state.update {
