@@ -62,16 +62,32 @@ class ExploreViewModel @Inject constructor(
     }
 
     fun loadSearches() {
+        /* todo remove */
         val a = TrRemoteVariables.googleCookies
         println("trending:log: - saved cookies: $a")
 
         viewModelScope.launch {
-            exploreRepository.loadSearches().onEach {
-                if (it is TrResponse.Success) {
-                    println("Explore viewmodel: loadsearches: ${it.result?.topicList}")
-                    println("Explore viewmodel: loadsearches: ${it.result?.queryList}")
+            exploreRepository.loadSearches().onEach { response ->
+
+                /*todo remove*/
+                if (response is TrResponse.Success) {
+                    println("Explore viewmodel: loadsearches: ${response.result?.topicList}")
+                    println("Explore viewmodel: loadsearches: ${response.result?.queryList}")
                 }
-                val a = ""
+
+                when (response) {
+                    is TrResponse.Success -> _state.update {
+                        it.copy(
+                            searchedTopicsList = response.result?.topicList,
+                            searchedQueriesList = response.result?.queryList,
+                        ).attemptHidingLoading()
+                    }
+
+                    is TrResponse.Error -> _state.update {
+                        ExploreState(error = response.message)
+                    }
+                }
+
             }.collect()
         }
     }
