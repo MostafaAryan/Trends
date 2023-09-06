@@ -38,8 +38,13 @@ class TrendingViewModel @Inject constructor(
     fun retrieveSelectedLocation() {
         viewModelScope.launch {
             dataStore.getLocationId().onEach { locationId ->
-                _selectedLocationId.value = locationId
-                selectedCountry = countryList.find { country -> country.id == locationId }
+                if(locationId == null) {
+                    // First time opening app. No location has been selected. Set the default location.
+                    updateSelectedLocationId(TrendsLocation.defaultLocationId)
+                } else {
+                    _selectedLocationId.value = locationId
+                    selectedCountry = countryList.find { country -> country.id == locationId }
+                }
             }.collect()
         }
     }
