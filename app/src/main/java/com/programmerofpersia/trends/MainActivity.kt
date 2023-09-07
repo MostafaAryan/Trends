@@ -124,7 +124,7 @@ fun Navigation() {
             Modifier.padding(innerPadding)
         ) {
             trendingGraph(navController, onTopAppBarAction) { topAppBarState = it }
-            exploreGraph(navController) { topAppBarState = it }
+            exploreGraph(navController, onTopAppBarAction) { topAppBarState = it }
         }
     }
 

@@ -39,14 +39,21 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.programmerofpersia.trends.common.ui.CollectAsEffect
+import com.programmerofpersia.trends.common.ui.FilterDialog
+import com.programmerofpersia.trends.common.ui.FilterDialogItem
+import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
+import com.programmerofpersia.trends.common.ui.model.mapper.toFilterDialogItem
 import com.programmerofpersia.trends.common.ui.theme.spacing
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordQueryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordTopicInfo
+import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
 fun ExploreRoute(
     navController: NavController,
-    viewModel: ExploreViewModel = hiltViewModel()
+    viewModel: ExploreViewModel = hiltViewModel(),
+    onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
 ) {
 
     LaunchedEffect(key1 = true) {
@@ -58,16 +65,25 @@ fun ExploreRoute(
     val state by viewModel.state.collectAsState()
     ExploreScreen(
         navController = navController,
-        state = state
+        state = state,
+        onTopAppBarAction
     )
 }
 
 @Composable
 private fun ExploreScreen(
     navController: NavController,
-    state: ExploreState
+    state: ExploreState,
+    onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
 ) {
 
+    var showFilterDialog by remember { mutableStateOf(false) }
+    onTopAppBarAction.CollectAsEffect {
+        when (it) {
+            TrTopAppBarActions.EndIconClicked -> showFilterDialog = true
+            else -> {}
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -125,6 +141,20 @@ private fun ExploreScreen(
                     }
                 }
             }
+
+            val dialogSelectionMap = remember { hashMapOf<String, FilterDialogItem?>() }
+            if (showFilterDialog) {
+                FilterDialog(
+                    itemMap = generateAlertDialogItemMap(state),
+                    previousSelectionMap = dialogSelectionMap,
+                    onDismissRequest = { showFilterDialog = false },
+                    onConfirmButtonClicked = {
+                        dialogSelectionMap.clear()
+                        dialogSelectionMap.putAll(it)
+                        showFilterDialog = false
+                    }
+                )
+            }
         }
 
         // State - Loading
@@ -137,6 +167,7 @@ private fun ExploreScreen(
             Text(text = state.error)
         }
     }
+
 }
 
 private fun LazyListScope.searchedTopicsItems(searchedTopicsList: List<KeywordTopicInfo>) {
@@ -198,6 +229,11 @@ private fun KeywordCard(title: String, formattedValue: String) {
     }
 
 }
+
+private fun generateAlertDialogItemMap(state: ExploreState) = hashMapOf<String, FilterDialogItem>(
+    state.geoList!!.name to state.geoList.toFilterDialogItem(),
+    state.categoryList!!.name to state.categoryList.toFilterDialogItem(),
+)
 
 
 @Composable
