@@ -45,6 +45,8 @@ import com.programmerofpersia.trends.common.ui.FilterDialogItem
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.model.mapper.toFilterDialogItem
 import com.programmerofpersia.trends.common.ui.theme.spacing
+import com.programmerofpersia.trends.data.domain.model.explore.SearchDateInfo
+import com.programmerofpersia.trends.data.domain.model.explore.SearchTypeInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordQueryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordTopicInfo
 import kotlinx.coroutines.flow.SharedFlow
@@ -230,9 +232,11 @@ private fun KeywordCard(title: String, formattedValue: String) {
 
 }
 
-private fun generateAlertDialogItemMap(state: ExploreState) = hashMapOf<String, FilterDialogItem>(
+private fun generateAlertDialogItemMap(state: ExploreState) = linkedMapOf<String, FilterDialogItem>(
     state.geoList!!.name to state.geoList.toFilterDialogItem(),
     state.categoryList!!.name to state.categoryList.toFilterDialogItem(),
+    SearchTypeInfo::class.simpleName!! to SearchTypeInfo.Companion.toFilterDialogItem(),
+    SearchDateInfo::class.simpleName!! to SearchDateInfo.Companion.toFilterDialogItem()
 )
 
 

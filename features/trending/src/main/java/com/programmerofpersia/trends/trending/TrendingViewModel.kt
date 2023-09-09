@@ -40,7 +40,7 @@ class TrendingViewModel @Inject constructor(
             dataStore.getLocationId().onEach { locationId ->
                 if(locationId == null) {
                     // First time opening app. No location has been selected. Set the default location.
-                    updateSelectedLocationId(TrendsLocation.defaultLocationId)
+                    updateSelectedLocationId(TrendsLocation.DEFAULT_LOCATION_ID)
                 } else {
                     _selectedLocationId.value = locationId
                     selectedCountry = countryList.find { country -> country.id == locationId }

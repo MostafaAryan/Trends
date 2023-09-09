@@ -51,7 +51,7 @@ data class FilterDialogItem(
 
 @Composable
 fun FilterDialog(
-    itemMap: HashMap<String, FilterDialogItem>,
+    itemMap: LinkedHashMap<String, FilterDialogItem>,
     previousSelectionMap: HashMap<String, FilterDialogItem?>,
     onDismissRequest: () -> Unit,
     onConfirmButtonClicked: (Map<String, FilterDialogItem?>) -> Unit
@@ -63,12 +63,12 @@ fun FilterDialog(
     val selectionMap = remember { mutableStateMapOf<String, FilterDialogItem?>() }
 
 
-    //
+    /*
+    * Populate local selection-state with the previously selected items.
+    * */
     LaunchedEffect(key1 = Unit) {
-        itemMap.forEach { (key, filterDialogItem) ->
-            selectionMap.clear()
-            selectionMap.putAll(previousSelectionMap)
-        }
+        selectionMap.clear()
+        selectionMap.putAll(previousSelectionMap)
     }
 
 
@@ -136,7 +136,7 @@ fun FilterDialog(
 
 @Composable
 private fun ItemList(
-    itemMap: HashMap<String, FilterDialogItem>,
+    itemMap: LinkedHashMap<String, FilterDialogItem>,
     selectionMap: SnapshotStateMap<String, FilterDialogItem?>,
     levelListState: SnapshotStateList<FilterDialogItem>,
     levelListKey: MutableState<String?>
@@ -181,7 +181,7 @@ private fun ItemList(
 
 @Composable
 private fun ParentLevel(
-    itemMap: HashMap<String, FilterDialogItem>,
+    itemMap: LinkedHashMap<String, FilterDialogItem>,
     selectionMap: SnapshotStateMap<String, FilterDialogItem?>,
     onItemSelected: (key: String, FilterDialogItem) -> Unit
 ) {
