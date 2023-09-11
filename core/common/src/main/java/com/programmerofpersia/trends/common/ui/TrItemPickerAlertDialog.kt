@@ -44,7 +44,7 @@ fun TrItemPickerAlertDialog(
     initialSelectedItem: TrItemPickerItem? = null,
     onConfirmButtonClicked: (TrItemPickerItem) -> Unit
 ) {
-    if (itemList.isEmpty()) return
+    if (itemList.isEmpty()) onDismissRequest()
 
     Dialog(
         onDismissRequest = onDismissRequest
