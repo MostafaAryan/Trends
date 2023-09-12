@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.programmerofpersia.trends.data.datastore.TrDataStore
+import com.programmerofpersia.trends.data.datastore.LocationStorage
 import com.programmerofpersia.trends.data.domain.TrendsLocation
 import com.programmerofpersia.trends.data.domain.repository.TrendingRepository
 import com.programmerofpersia.trends.data.remote.model.TrResponse
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TrendingViewModel @Inject constructor(
     private val trendingRepository: TrendingRepository,
-    private val dataStore: TrDataStore
+    private val locationStorage: LocationStorage
 ) : ViewModel() {
 
     private var _selectedLocationId = MutableStateFlow<String?>(null)
@@ -37,8 +37,8 @@ class TrendingViewModel @Inject constructor(
 
     fun retrieveSelectedLocation() {
         viewModelScope.launch {
-            dataStore.getLocationId().onEach { locationId ->
-                if(locationId == null) {
+            locationStorage.retrieve().onEach { locationId ->
+                if (locationId == null) {
                     // First time opening app. No location has been selected. Set the default location.
                     updateSelectedLocationId(TrendsLocation.DEFAULT_LOCATION_ID)
                 } else {
@@ -50,7 +50,7 @@ class TrendingViewModel @Inject constructor(
     }
 
     fun updateSelectedLocationId(locationId: String) {
-        viewModelScope.launch { dataStore.setLocationId(locationId) }
+        viewModelScope.launch { locationStorage.store(locationId) }
     }
 
     fun handleLocationChanges() {
