@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DefaultSearchedKeywordsDto(
-    val rankedList : List<RankedListItemDto>
+    val rankedList: List<RankedListItemDto>
 )
