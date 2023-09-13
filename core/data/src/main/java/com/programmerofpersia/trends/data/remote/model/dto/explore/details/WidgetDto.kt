@@ -12,7 +12,7 @@ data class WidgetDto(
 ) {
 
     /* todo : change to polymorphic deserialization using 'id' */
-    enum class Type(val index : Int, val id: String) {
+    enum class Type(val index: Int, val id: String) {
         RELATED_TOPICS(0, "RELATED_TOPICS"),
         RELATED_QUERIES(1, "RELATED_QUERIES")
     }
