@@ -14,7 +14,7 @@ fun GeoInfo.toFilterDialogItem(): FilterDialogItem = FilterDialogItem(
 )
 
 fun CategoryInfo.toFilterDialogItem(): FilterDialogItem = FilterDialogItem(
-    id = id.toString(),
+    id = id,
     title = name,
     children = children.map { it.toFilterDialogItem() }
 )
@@ -22,12 +22,12 @@ fun CategoryInfo.toFilterDialogItem(): FilterDialogItem = FilterDialogItem(
 fun SearchTypeInfo.Companion.toFilterDialogItem(): FilterDialogItem {
     return getAllSearchTypesAsList().run {
         FilterDialogItem(
-            id = get(0).property,
-            title = get(0).title,
+            id = get(0).id,
+            title = get(0).name,
             children = drop(1).map {
                 FilterDialogItem(
-                    id = it.property,
-                    title = it.title,
+                    id = it.id,
+                    title = it.name,
                     children = listOf()
                 )
             }

@@ -4,9 +4,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CategoryDto(
-    private val children: List<CategoryDto>? = null,
+
+    /*
+    * Its server-side type is Int.
+    * */
+    @Serializable(IntAsStringSerializer::class)
+    val id: String,
+
     val name: String,
-    val id: Int,
+
+    private val children: List<CategoryDto>? = null,
+
 ) {
 
     val childrenList: List<CategoryDto>

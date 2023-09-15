@@ -9,15 +9,16 @@ data class SearchDateInfo(
     /*
     * Send inside API request.
     * */
-    val id: String,
+    override val id: String,
 
     /*
     * Display in the UI.
     * */
-    val name: String,
+    override val name: String,
 
     val backend: String
-) {
+
+) : BaseFilterInfo {
 
 
     companion object {

@@ -1,7 +1,17 @@
 package com.programmerofpersia.trends.data.domain.model.explore
 
+import kotlinx.serialization.SerialName
 
-data class SearchTypeInfo(val property: String, val title: String) {
+
+data class SearchTypeInfo(
+
+    @SerialName("property")
+    override val id: String,
+
+    @SerialName("title")
+    override val name: String
+
+) : BaseFilterInfo {
 
     companion object {
 
