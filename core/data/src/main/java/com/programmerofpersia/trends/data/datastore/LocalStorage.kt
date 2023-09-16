@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalStorage<T> {
 
-    val dataStore : PreferencesDataStore<T>
+    val dataStore : TrDataStore<T>
 
     val key : String
 

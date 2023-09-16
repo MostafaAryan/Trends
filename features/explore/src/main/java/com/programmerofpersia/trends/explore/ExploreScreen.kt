@@ -25,6 +25,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -62,13 +63,17 @@ fun ExploreRoute(
         viewModel.loadGeoList()
         viewModel.loadCategoryList()
         viewModel.loadSearches()
+
+        viewModel.retrieveSelectedFilters()
     }
 
     val state by viewModel.state.collectAsState()
     ExploreScreen(
         navController = navController,
         state = state,
-        onTopAppBarAction
+        onTopAppBarAction,
+        viewModel::storeSelectedFilters,
+        viewModel.selectedFilters.collectAsState()
     )
 }
 
@@ -77,6 +82,8 @@ private fun ExploreScreen(
     navController: NavController,
     state: ExploreState,
     onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
+    storeSelectedFilters: (Map<String, FilterDialogItem>) -> Unit,
+    selectedFiltersMap: State<Map<String, FilterDialogItem>>
 ) {
 
     var showFilterDialog by remember { mutableStateOf(false) }
@@ -144,15 +151,16 @@ private fun ExploreScreen(
                 }
             }
 
-            val dialogSelectionMap = remember { hashMapOf<String, FilterDialogItem?>() }
+
             if (showFilterDialog) {
                 FilterDialog(
                     itemMap = generateAlertDialogItemMap(state),
-                    previousSelectionMap = dialogSelectionMap,
+                    previousSelectionMap = selectedFiltersMap.value.toMutableMap(),
                     onDismissRequest = { showFilterDialog = false },
                     onConfirmButtonClicked = {
-                        dialogSelectionMap.clear()
-                        dialogSelectionMap.putAll(it)
+                        // Persist data in memory for future access:
+                        storeSelectedFilters(it)
+
                         showFilterDialog = false
                     }
                 )

@@ -1,6 +1,8 @@
 package com.programmerofpersia.trends.common.ui.model.mapper
 
 import com.programmerofpersia.trends.common.ui.FilterDialogItem
+import com.programmerofpersia.trends.data.domain.model.explore.BaseFilterInfo
+import com.programmerofpersia.trends.data.domain.model.explore.BaseFilterInfoImpl
 import com.programmerofpersia.trends.data.domain.model.explore.CategoryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.GeoInfo
 import com.programmerofpersia.trends.data.domain.model.explore.SearchDateInfo
@@ -59,3 +61,11 @@ fun SearchDateInfo.Companion.toFilterDialogItem(): FilterDialogItem {
         }
     )
 }
+
+fun Map<String, FilterDialogItem>.toBaseFilterMap() = map {
+    (it.key to BaseFilterInfoImpl(it.value.id, it.value.title))
+}.toMap()
+
+fun Map<String, BaseFilterInfo>.fromBaseFilterMap() = map {
+    (it.key to FilterDialogItem(id = it.value.id, title = it.value.name, children = listOf()))
+}.toMap()

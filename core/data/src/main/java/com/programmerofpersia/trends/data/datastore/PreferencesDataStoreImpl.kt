@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 class PreferencesDataStoreImpl<T>(
     private val appContext: Context,
     private val klass: Class<T>
-) : PreferencesDataStore<T> {
+) : TrDataStore.PreferencesDataStore<T> {
 
     /* todo replace with constant string */
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "presentation-data")

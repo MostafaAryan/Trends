@@ -52,6 +52,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     //
+    implementation(libs.kotlinx.collections.immutable)
+
+    //
     implementation(libs.datastore.preferences)
 
     testImplementation(libs.junit)

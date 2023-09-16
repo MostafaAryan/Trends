@@ -2,13 +2,19 @@ package com.programmerofpersia.trends.explore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.programmerofpersia.trends.common.ui.FilterDialogItem
+import com.programmerofpersia.trends.common.ui.model.mapper.fromBaseFilterMap
+import com.programmerofpersia.trends.common.ui.model.mapper.toBaseFilterMap
+import com.programmerofpersia.trends.data.datastore.ExploreFilterStorage
 import com.programmerofpersia.trends.data.domain.repository.ExploreRepository
 import com.programmerofpersia.trends.data.remote.TrRemoteVariables
 import com.programmerofpersia.trends.data.remote.model.TrResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,11 +22,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private val exploreRepository: ExploreRepository
+    private val exploreRepository: ExploreRepository,
+    private val exploreFilterStorage: ExploreFilterStorage
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ExploreState())
     val state = _state.asStateFlow()
+
+    private val _selectedFilters =
+        MutableStateFlow<MutableMap<String, FilterDialogItem>>(mutableMapOf())
+    val selectedFilters: StateFlow<Map<String, FilterDialogItem>> = _selectedFilters
 
     fun loadGeoList() {
         viewModelScope.launch {
@@ -90,6 +101,21 @@ class ExploreViewModel @Inject constructor(
 
             }.collect()
         }
+    }
+
+    fun storeSelectedFilters(filterSelectionMap: Map<String, FilterDialogItem>) {
+        viewModelScope.launch {
+            exploreFilterStorage.store(filterSelectionMap.toBaseFilterMap())
+        }
+    }
+
+    fun retrieveSelectedFilters() {
+        exploreFilterStorage.retrieve().onEach {
+            if (it != null) {
+                _selectedFilters.value.clear()
+                _selectedFilters.value.putAll(it.fromBaseFilterMap())
+            }
+        }.launchIn(viewModelScope)
     }
 
 

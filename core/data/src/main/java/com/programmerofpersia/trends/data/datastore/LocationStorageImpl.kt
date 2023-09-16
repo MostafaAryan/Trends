@@ -3,7 +3,7 @@ package com.programmerofpersia.trends.data.datastore
 import kotlinx.coroutines.flow.Flow
 
 class LocationStorageImpl(
-    override val dataStore: PreferencesDataStore<String>
+    override val dataStore: TrDataStore.PreferencesDataStore<String>
 ) : LocationStorage {
 
     /* todo replace with constant string */
