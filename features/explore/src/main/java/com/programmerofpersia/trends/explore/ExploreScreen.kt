@@ -40,6 +40,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.programmerofpersia.trends.common.ui.ClickableChipGroup
 import com.programmerofpersia.trends.common.ui.CollectAsEffect
 import com.programmerofpersia.trends.common.ui.FilterDialog
 import com.programmerofpersia.trends.common.ui.FilterDialogItem
@@ -86,6 +87,14 @@ private fun ExploreScreen(
     selectedFiltersMap: State<Map<String, FilterDialogItem>>
 ) {
 
+    /*val selectedFiltersMap = remember { mutableStateMapOf<String, FilterDialogItem>() }
+    selectedFilters.CollectAsEffect {
+        println("Trending-explore: CollectAsEffect: ${it}")
+
+        selectedFiltersMap.clear()
+        selectedFiltersMap.putAll(it)
+    }*/
+
     var showFilterDialog by remember { mutableStateOf(false) }
     onTopAppBarAction.CollectAsEffect {
         when (it) {
@@ -113,10 +122,29 @@ private fun ExploreScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(100.dp)
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .padding(horizontal = MaterialTheme.spacing.grid_1)
                         /*.offset(y = with(LocalDensity.current) { lazyListState.firstVisibleItemScrollOffset.toDp() })*/
                     ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
 
+                            //
+                            ClickableChipGroup(
+                                chipList = getSortedSelectedFiltersList(
+                                    state,
+                                    selectedFiltersMap.value
+                                ),
+                                onChipClick = { index ->
+                                    /* todo : Go to specific menu associated with the clicked chip. */
+                                    showFilterDialog = true
+                                },
+                                modifier = Modifier.padding(bottom = MaterialTheme.spacing.grid_2)
+                            )
+
+                        }
                     }
                 }
 
@@ -242,12 +270,24 @@ private fun KeywordCard(title: String, formattedValue: String) {
 
 private fun generateAlertDialogItemMap(state: ExploreState) = linkedMapOf<String, FilterDialogItem>(
     state.geoList!!.name to state.geoList.toFilterDialogItem(),
+    SearchDateInfo::class.simpleName!! to SearchDateInfo.Companion.toFilterDialogItem(),
     state.categoryList!!.name to state.categoryList.toFilterDialogItem(),
-    SearchTypeInfo::class.simpleName!! to SearchTypeInfo.Companion.toFilterDialogItem(),
-    SearchDateInfo::class.simpleName!! to SearchDateInfo.Companion.toFilterDialogItem()
+    SearchTypeInfo::class.simpleName!! to SearchTypeInfo.Companion.toFilterDialogItem()
 )
 
+private fun getSortedSelectedFiltersList(
+    state: ExploreState,
+    selectedFiltersMap: Map<String, FilterDialogItem>
+): List<FilterDialogItem> {
+    val selectedFiltersList = mutableListOf<FilterDialogItem>()
+    generateAlertDialogItemMap(state).forEach { (key, filterDialogItem) ->
+        selectedFiltersMap[key]?.let { value -> selectedFiltersList.add(value) }
+    }
+    return selectedFiltersList
+}
 
+
+/* todo remove : */
 @Composable
 private fun OldExploreScreen(
     navController: NavController,

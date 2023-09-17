@@ -39,6 +39,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.programmerofpersia.trends.common.ui.theme.spacing
 import com.programmerofpersia.trends.common.ui.theme.trLabelXLarge
 import com.programmerofpersia.trends.common.ui.theme.trTitleLarge
+import com.programmerofpersia.trends.data.domain.ui.ClickableChipMediator
 
 
 data class FilterDialogItem(
@@ -46,7 +47,13 @@ data class FilterDialogItem(
     val title: String,
     val icon: String? = null,
     val children: List<FilterDialogItem>
-)
+) : ClickableChipMediator {
+
+    override fun getClickableChipText() = title
+
+    override fun getClickableChipKey() = "${id}-${title}"
+
+}
 
 
 @Composable
@@ -58,7 +65,6 @@ fun FilterDialog(
 ) {
     //
     val levelListState = remember { mutableStateListOf<FilterDialogItem>() }
-    val levelListKey = remember { mutableStateOf<String?>(null) }
 
     val selectionMap = remember { mutableStateMapOf<String, FilterDialogItem>() }
 

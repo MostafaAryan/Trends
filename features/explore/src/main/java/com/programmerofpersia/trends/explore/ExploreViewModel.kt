@@ -112,8 +112,7 @@ class ExploreViewModel @Inject constructor(
     fun retrieveSelectedFilters() {
         exploreFilterStorage.retrieve().onEach {
             if (it != null) {
-                _selectedFilters.value.clear()
-                _selectedFilters.value.putAll(it.fromBaseFilterMap())
+                _selectedFilters.value = it.fromBaseFilterMap().toMutableMap()
             }
         }.launchIn(viewModelScope)
     }
