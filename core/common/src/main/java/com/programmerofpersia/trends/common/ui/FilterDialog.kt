@@ -63,15 +63,34 @@ fun FilterDialog(
     onDismissRequest: () -> Unit,
     onConfirmButtonClicked: (Map<String, FilterDialogItem>) -> Unit
 ) {
-    //
+
+    /**
+     * Indicates which filter-type is being displayed currently (e.g., location, category, etc.).
+     * When it is 'null', parent menu is being displayed.
+     **/
+    val levelListKey = remember { mutableStateOf<String?>(null) }
+
+    /**
+     * Keeps track of how deep are we currently inside a specific filter-type.
+     * The last item in the list is the parent of the current menu being displayed and the current
+     * menu items are its children.
+     * When list is empty, we are at the parent menu.
+     *
+     * For example:
+     * - When user clicks on Canada, the FilterDialogItem associated with it is added to the list
+     * and we are now one level deep, displaying Canada.children items.
+     * - Then user clicks, Ontario, and the FilterDialogItem associated with it is added to the list,
+     * now we are two levels deep, displaying Ontario.children.
+     *
+     **/
     val levelListState = remember { mutableStateListOf<FilterDialogItem>() }
 
     val selectionMap = remember { mutableStateMapOf<String, FilterDialogItem>() }
 
 
-    /*
-    * Populate local selection-state with the previously selected items.
-    * */
+    /**
+     * Populates local selection-state with the previously selected items.
+     **/
     LaunchedEffect(key1 = Unit) {
         selectionMap.clear()
         selectionMap.putAll(previousSelectionMap)
