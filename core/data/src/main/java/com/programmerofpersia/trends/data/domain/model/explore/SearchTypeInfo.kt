@@ -26,6 +26,9 @@ data class SearchTypeInfo(
             imageSearch,
             googleShopping
         )
+
+        /* todo improve implementation to avoid not-null symbol. */
+        val key = SearchTypeInfo::class.simpleName!!
     }
 
 }

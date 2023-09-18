@@ -28,6 +28,9 @@ data class SearchDateInfo(
 
         fun getDateList() = Json.decodeFromString<List<SearchDateInfo>>(RAW_DATES)
 
+        /* todo improve implementation to avoid not-null symbol. */
+        val key = SearchDateInfo::class.simpleName!!
+
     }
 
 }

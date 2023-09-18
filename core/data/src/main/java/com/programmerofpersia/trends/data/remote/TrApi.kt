@@ -26,10 +26,9 @@ interface TrApi {
     @GET("${Constants.CATEGORY_LIST}?hl=en-US&tz=-210")
     suspend fun fetchCategoryList(): Response<CategoryDto>
 
-    /* todo use data class for query param */
-    @GET("${Constants.EXPLORE_DETAILS}?hl=en-US&tz=-210&req=%7B%22comparisonItem%22:%5B%7B%22geo%22:%22IR%22,%22time%22:%22today+12-m%22%7D%5D,%22category%22:0,%22property%22:%22%22%7D")
+    @GET("${Constants.EXPLORE_DETAILS}?hl=en-US&tz=-210")
     suspend fun fetchExploreDetails(
-        /*@Query("req") requestDetails: String*/
+        @Query("req") requestDetails: String
     ): Response<ExploreDetailsResponse>
 
     @GET("${Constants.SEARCHED_KEYWORDS}?hl=en-US&tz=-210")

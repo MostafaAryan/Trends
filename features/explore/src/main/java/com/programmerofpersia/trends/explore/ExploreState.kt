@@ -14,6 +14,15 @@ data class ExploreState(
     val error: String? = null
 ) {
 
+    fun atLeastFilterDataIsAvailable() =
+        geoList != null
+                && categoryList != null
+
+    fun onlyFilterDataIsAvailable() =
+        atLeastFilterDataIsAvailable()
+                && searchedTopicsList == null
+                && searchedQueriesList == null
+
     fun areAllScreenDataAvailable() =
         geoList != null
                 && categoryList != null
@@ -32,6 +41,7 @@ data class ExploreState(
         }*/
 }
 
+/* todo : change to instance object function */
 fun ExploreState.attemptHidingLoading(): ExploreState {
     return if (
         ((geoList != null

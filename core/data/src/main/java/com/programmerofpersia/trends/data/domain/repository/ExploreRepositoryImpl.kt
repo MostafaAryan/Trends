@@ -3,6 +3,7 @@ package com.programmerofpersia.trends.data.domain.repository
 import com.programmerofpersia.trends.data.domain.model.explore.CategoryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.GeoInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordInfo
+import com.programmerofpersia.trends.data.domain.model.request.ExploreDetailParams
 import com.programmerofpersia.trends.data.remote.ApiExecutor
 import com.programmerofpersia.trends.data.remote.TrApi
 import com.programmerofpersia.trends.data.remote.model.TrResponse
@@ -15,6 +16,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 
 class ExploreRepositoryImpl(
     private val trApi: TrApi,
@@ -45,9 +48,18 @@ class ExploreRepositoryImpl(
         }
     }
 
-    override fun loadSearches(): Flow<TrResponse<KeywordInfo>> = flow {
-        emitApiResponse {
-            trApi.fetchExploreDetails()
+    override fun loadSearches(queryParams : ExploreDetailParams): Flow<TrResponse<KeywordInfo>> = flow {
+        var params : String? = null
+        try {
+            params = Json.encodeToJsonElement(queryParams).toString()
+        } catch (e: Exception) {
+            TrResponse.Error("Params error: ${e.message}")
+        } finally {
+            if(!params.isNullOrEmpty()) {
+                emitApiResponse {
+                    trApi.fetchExploreDetails(params)
+                }
+            } else TrResponse.Error("Params error!")
         }
     }.map {
         when (it) {

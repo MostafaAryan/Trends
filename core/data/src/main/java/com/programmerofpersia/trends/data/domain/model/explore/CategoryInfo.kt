@@ -4,4 +4,11 @@ data class CategoryInfo(
     val children: List<CategoryInfo>,
     override val name: String,
     override val id: String,
-) : BaseFilterInfo
+) : BaseFilterInfo {
+
+    companion object {
+        /* todo improve implementation to avoid not-null symbol. */
+        val key = CategoryInfo::class.simpleName!!
+    }
+
+}

@@ -45,10 +45,7 @@ import com.programmerofpersia.trends.common.ui.CollectAsEffect
 import com.programmerofpersia.trends.common.ui.FilterDialog
 import com.programmerofpersia.trends.common.ui.FilterDialogItem
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
-import com.programmerofpersia.trends.common.ui.model.mapper.toFilterDialogItem
 import com.programmerofpersia.trends.common.ui.theme.spacing
-import com.programmerofpersia.trends.data.domain.model.explore.SearchDateInfo
-import com.programmerofpersia.trends.data.domain.model.explore.SearchTypeInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordQueryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordTopicInfo
 import kotlinx.coroutines.flow.SharedFlow
@@ -61,11 +58,7 @@ fun ExploreRoute(
 ) {
 
     LaunchedEffect(key1 = true) {
-        viewModel.loadGeoList()
-        viewModel.loadCategoryList()
-        viewModel.loadSearches()
-
-        viewModel.retrieveSelectedFilters()
+        viewModel.prepareFilters()
     }
 
     val state by viewModel.state.collectAsState()
@@ -73,6 +66,7 @@ fun ExploreRoute(
         navController = navController,
         state = state,
         onTopAppBarAction,
+        viewModel.generateFilterDialogParentMap(state),
         viewModel::storeSelectedFilters,
         viewModel.selectedFilters.collectAsState()
     )
@@ -83,6 +77,7 @@ private fun ExploreScreen(
     navController: NavController,
     state: ExploreState,
     onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
+    filterDialogParentMap: LinkedHashMap<String, FilterDialogItem>,
     storeSelectedFilters: (Map<String, FilterDialogItem>) -> Unit,
     selectedFiltersMap: State<Map<String, FilterDialogItem>>
 ) {
@@ -105,8 +100,20 @@ private fun ExploreScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
+        // State - Loading
+        if (state.isLoading) {
+            /* todo improve loading and centralize it across different screens. */
+            Card(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+            ) {
+                CircularProgressIndicator(Modifier.padding(all = MaterialTheme.spacing.grid_3))
+            }
+        }
+
         // State - Success
-        if (state.areAllScreenDataAvailable()) {
+        if (state.areAllScreenDataAvailable() && !state.isLoading) {
 
             val lazyListState = rememberLazyListState()
 
@@ -134,7 +141,7 @@ private fun ExploreScreen(
                             //
                             ClickableChipGroup(
                                 chipList = getSortedSelectedFiltersList(
-                                    state,
+                                    filterDialogParentMap,
                                     selectedFiltersMap.value
                                 ),
                                 onChipClick = { index ->
@@ -179,31 +186,27 @@ private fun ExploreScreen(
                 }
             }
 
-
-            if (showFilterDialog) {
-                FilterDialog(
-                    itemMap = generateAlertDialogItemMap(state),
-                    previousSelectionMap = selectedFiltersMap.value.toMutableMap(),
-                    onDismissRequest = { showFilterDialog = false },
-                    onConfirmButtonClicked = {
-                        // Persist data in memory for future access:
-                        storeSelectedFilters(it)
-
-                        showFilterDialog = false
-                    }
-                )
-            }
-        }
-
-        // State - Loading
-        if (state.isLoading) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
 
         // State - Error (todo implement error screen)
         if (state.error != null) {
             Text(text = state.error)
         }
+
+        if (state.atLeastFilterDataIsAvailable() && showFilterDialog) {
+            FilterDialog(
+                itemMap = filterDialogParentMap,
+                previousSelectionMap = selectedFiltersMap.value.toMutableMap(),
+                onDismissRequest = { showFilterDialog = false },
+                onConfirmButtonClicked = {
+                    // Persist data in memory for future access:
+                    storeSelectedFilters(it)
+
+                    showFilterDialog = false
+                }
+            )
+        }
+
     }
 
 }
@@ -268,19 +271,12 @@ private fun KeywordCard(title: String, formattedValue: String) {
 
 }
 
-private fun generateAlertDialogItemMap(state: ExploreState) = linkedMapOf<String, FilterDialogItem>(
-    state.geoList!!.name to state.geoList.toFilterDialogItem(),
-    SearchDateInfo::class.simpleName!! to SearchDateInfo.Companion.toFilterDialogItem(),
-    state.categoryList!!.name to state.categoryList.toFilterDialogItem(),
-    SearchTypeInfo::class.simpleName!! to SearchTypeInfo.Companion.toFilterDialogItem()
-)
-
 private fun getSortedSelectedFiltersList(
-    state: ExploreState,
+    filterDialogParentMap: LinkedHashMap<String, FilterDialogItem>,
     selectedFiltersMap: Map<String, FilterDialogItem>
 ): List<FilterDialogItem> {
     val selectedFiltersList = mutableListOf<FilterDialogItem>()
-    generateAlertDialogItemMap(state).forEach { (key, filterDialogItem) ->
+    filterDialogParentMap.forEach { (key, filterDialogItem) ->
         selectedFiltersMap[key]?.let { value -> selectedFiltersList.add(value) }
     }
     return selectedFiltersList
