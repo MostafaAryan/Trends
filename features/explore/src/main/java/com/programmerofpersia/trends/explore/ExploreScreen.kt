@@ -2,10 +2,8 @@ package com.programmerofpersia.trends.explore
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -81,14 +78,6 @@ private fun ExploreScreen(
     storeSelectedFilters: (Map<String, FilterDialogItem>) -> Unit,
     selectedFiltersMap: State<Map<String, FilterDialogItem>>
 ) {
-
-    /*val selectedFiltersMap = remember { mutableStateMapOf<String, FilterDialogItem>() }
-    selectedFilters.CollectAsEffect {
-        println("Trending-explore: CollectAsEffect: ${it}")
-
-        selectedFiltersMap.clear()
-        selectedFiltersMap.putAll(it)
-    }*/
 
     var showFilterDialog by remember { mutableStateOf(false) }
     onTopAppBarAction.CollectAsEffect {
@@ -280,36 +269,4 @@ private fun getSortedSelectedFiltersList(
         selectedFiltersMap[key]?.let { value -> selectedFiltersList.add(value) }
     }
     return selectedFiltersList
-}
-
-
-/* todo remove : */
-@Composable
-private fun OldExploreScreen(
-    navController: NavController,
-    state: ExploreState
-) {
-
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(all = 50.dp)
-    ) {
-        Text(text = "Explore")
-        Spacer(modifier = Modifier.height(20.dp))
-        Button(
-            onClick = {
-                /*navController.navigate(Screen.TrendingNowGraph.route) {
-                    popUpTo(Screen.ExploreGraph.route) {
-                        inclusive = true
-                    }
-                }*/
-            },
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            Text(text = "Display Trending Now Screen")
-        }
-    }
-
 }

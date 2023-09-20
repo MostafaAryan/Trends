@@ -29,26 +29,16 @@ data class ExploreState(
                 && searchedTopicsList != null
                 && searchedQueriesList != null
 
-    /*var isLoading: Boolean = false
-        set(value) {
-            if (!value
-                && ((geoList != null
-                        && categoryList != null
-                        && searchedTopicsList != null
-                        && searchedQueriesList != null) || error != null)
-            ) field = false
-            field = value
-        }*/
+    fun attemptHidingLoading(): ExploreState {
+        return if (
+            ((geoList != null
+                    && categoryList != null
+                    && searchedTopicsList != null
+                    && searchedQueriesList != null) || error != null)
+        ) this.copy(
+            isLoading = false
+        ) else this
+    }
+
 }
 
-/* todo : change to instance object function */
-fun ExploreState.attemptHidingLoading(): ExploreState {
-    return if (
-        ((geoList != null
-                && categoryList != null
-                && searchedTopicsList != null
-                && searchedQueriesList != null) || error != null)
-    ) this.copy(
-        isLoading = false
-    ) else this
-}

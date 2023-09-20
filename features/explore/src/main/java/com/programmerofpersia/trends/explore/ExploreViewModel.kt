@@ -13,7 +13,6 @@ import com.programmerofpersia.trends.data.domain.model.explore.SearchDateInfo
 import com.programmerofpersia.trends.data.domain.model.explore.SearchTypeInfo
 import com.programmerofpersia.trends.data.domain.model.request.ExploreDetailParams
 import com.programmerofpersia.trends.data.domain.repository.ExploreRepository
-import com.programmerofpersia.trends.data.remote.TrRemoteVariables
 import com.programmerofpersia.trends.data.remote.model.TrResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -101,12 +100,6 @@ class ExploreViewModel @Inject constructor(
     }
 
     private fun loadSearches(queryParams: ExploreDetailParams) {
-        println("trending API2: loadSearches queryParams:${queryParams}")
-
-        /* todo remove */
-        val a = TrRemoteVariables.googleCookies
-        println("trending:log: - saved cookies: $a")
-
 
         viewModelScope.launch {
 
@@ -118,12 +111,6 @@ class ExploreViewModel @Inject constructor(
             }
 
             exploreRepository.loadSearches(queryParams).onEach { response ->
-
-                /*todo remove*/
-                if (response is TrResponse.Success) {
-                    println("Explore viewmodel: loadsearches: ${response.result?.topicList}")
-                    println("Explore viewmodel: loadsearches: ${response.result?.queryList}")
-                }
 
                 when (response) {
                     is TrResponse.Success -> _state.update {
