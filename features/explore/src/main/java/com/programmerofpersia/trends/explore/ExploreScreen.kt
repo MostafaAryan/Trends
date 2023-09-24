@@ -58,12 +58,12 @@ fun ExploreRoute(
         viewModel.prepareFilters()
     }
 
-    val state by viewModel.state.collectAsState()
+    val stateHolder by viewModel.state.collectAsState()
     ExploreScreen(
         navController = navController,
-        state = state,
+        stateHolder = stateHolder,
         onTopAppBarAction,
-        viewModel.generateFilterDialogParentMap(state),
+        viewModel.generateFilterDialogParentMap(stateHolder),
         viewModel::storeSelectedFilters,
         viewModel.selectedFilters.collectAsState()
     )
@@ -72,7 +72,7 @@ fun ExploreRoute(
 @Composable
 private fun ExploreScreen(
     navController: NavController,
-    state: ExploreState,
+    stateHolder: ExploreStateHolder,
     onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
     filterDialogParentMap: LinkedHashMap<String, FilterDialogItem>,
     storeSelectedFilters: (Map<String, FilterDialogItem>) -> Unit,
@@ -90,7 +90,7 @@ private fun ExploreScreen(
     Box(modifier = Modifier.fillMaxSize()) {
 
         // State - Loading
-        if (state.isLoading) {
+        if (stateHolder.currentState() is ExploreState.Loading) {
             /* todo improve loading and centralize it across different screens. */
             Card(
                 modifier = Modifier
@@ -102,7 +102,9 @@ private fun ExploreScreen(
         }
 
         // State - Success
-        if (state.areAllScreenDataAvailable() && !state.isLoading) {
+        if (stateHolder.currentState() is ExploreState.Success.AllScreenDataIsAvailable &&
+            (stateHolder.currentState() !is ExploreState.Loading)
+        ) {
 
             val lazyListState = rememberLazyListState()
 
@@ -169,8 +171,8 @@ private fun ExploreScreen(
                     state = lazyListState
                 ) {
                     when (selectedTabIndex) {
-                        0 -> searchedTopicsItems(state.searchedTopicsList!!)
-                        1 -> searchedQueriesItems(state.searchedQueriesList!!)
+                        0 -> searchedTopicsItems(stateHolder.searchedTopicsList!!)
+                        1 -> searchedQueriesItems(stateHolder.searchedQueriesList!!)
                     }
                 }
             }
@@ -178,11 +180,11 @@ private fun ExploreScreen(
         }
 
         // State - Error (todo implement error screen)
-        if (state.error != null) {
-            Text(text = state.error)
+        if (stateHolder.currentState() is ExploreState.Error) {
+            Text(text = (stateHolder.currentState() as ExploreState.Error).message ?: "")
         }
 
-        if (state.atLeastFilterDataIsAvailable() && showFilterDialog) {
+        if (stateHolder.atLeastFilterDataIsAvailable() && showFilterDialog) {
             FilterDialog(
                 itemMap = filterDialogParentMap,
                 previousSelectionMap = selectedFiltersMap.value.toMutableMap(),

@@ -33,7 +33,8 @@ class ExploreViewModel @Inject constructor(
     private val exploreFilterStorage: ExploreFilterStorage
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(ExploreState())
+    private val _state =
+        MutableStateFlow<ExploreStateHolder>(ExploreStateHolder())
     val state = _state.asStateFlow()
 
     private val _selectedFilters =
@@ -52,19 +53,23 @@ class ExploreViewModel @Inject constructor(
         viewModelScope.launch {
             /* todo loading should correlate with other api calls */
             _state.update {
-                ExploreState(
-                    isLoading = true
-                )
+                ExploreStateHolder().setState(ExploreState.Loading)
             }
 
             exploreRepository.loadGeoList().onEach { response ->
                 when (response) {
                     is TrResponse.Success -> _state.update {
-                        it.copy(geoList = response.result).attemptHidingLoading()
+                        // it.copy(geoList = response.result).attemptHidingLoading()
+                        it.copy().setState(
+                            ExploreState.Success.OnlyFilterDataIsAvailable(
+                                geo = response.result
+                            )
+                        )
                     }
 
                     is TrResponse.Error -> _state.update {
-                        ExploreState(error = response.message)
+                        // ExploreState(error = response.message)
+                        it.copy().setState(ExploreState.Error(response.message))
                     }
                 }
             }.collect()
@@ -76,11 +81,16 @@ class ExploreViewModel @Inject constructor(
             exploreRepository.loadCategoryList().onEach { response ->
                 when (response) {
                     is TrResponse.Success -> _state.update {
-                        it.copy(categoryList = response.result).attemptHidingLoading()
+                        // it.copy(categoryList = response.result).attemptHidingLoading()
+                        it.copy().setState(
+                            ExploreState.Success.OnlyFilterDataIsAvailable(
+                                category = response.result
+                            )
+                        )
                     }
 
                     is TrResponse.Error -> _state.update {
-                        ExploreState(error = response.message)
+                        it.copy().setState(ExploreState.Error(response.message))
                     }
                 }
             }.collect()
@@ -89,7 +99,8 @@ class ExploreViewModel @Inject constructor(
 
     private fun observeAndFinalizeFilters() {
         _state.onEach { exploreState ->
-            if (exploreState.onlyFilterDataIsAvailable()) {
+            if (exploreState.currentState() is ExploreState.Success.OnlyFilterDataIsAvailable
+            ) {
                 // start collecting filter selection changes:
                 retrieveSelectedFilters()
 
@@ -104,30 +115,30 @@ class ExploreViewModel @Inject constructor(
         viewModelScope.launch {
 
             _state.update {
-                it.copy(
-                    isLoading = true,
-                    error = null
-                )
+                it.copy().setState(ExploreState.Loading)
             }
 
             exploreRepository.loadSearches(queryParams).onEach { response ->
 
                 when (response) {
                     is TrResponse.Success -> _state.update {
-                        it.copy(
+                        /*it.copy(
                             searchedTopicsList = response.result?.topicList,
                             searchedQueriesList = response.result?.queryList,
                             error = null
-                        ).attemptHidingLoading()
+                        ).attemptHidingLoading()*/
+
+                        it.copy().setState(
+                            ExploreState.Success.AllScreenDataIsAvailable(
+                                searchedTopics = response.result?.topicList,
+                                searchedQueries = response.result?.queryList,
+                            )
+                        )
+
                     }
 
                     is TrResponse.Error -> _state.update {
-                        it.copy(
-                            searchedTopicsList = null,
-                            searchedQueriesList = null,
-                            isLoading = false,
-                            error = response.message
-                        )
+                        it.copy().setState(ExploreState.Error(response.message))
                     }
                 }
 
@@ -164,7 +175,7 @@ class ExploreViewModel @Inject constructor(
     }
 
     fun generateFilterDialogParentMap(
-        exploreState: ExploreState,
+        exploreState: ExploreStateHolder,
         includeChildObjects: Boolean = true
     ): LinkedHashMap<String, FilterDialogItem> {
         return if (exploreState.atLeastFilterDataIsAvailable()) {
