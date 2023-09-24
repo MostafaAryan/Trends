@@ -31,7 +31,6 @@ data class ExploreStateHolder private constructor(
         get() = _searchedQueriesList
 
 
-
     /* todo : return immutable state */
     fun currentState() = exploreState
     fun setState(inputExploreState: ExploreState): ExploreStateHolder {
@@ -91,44 +90,5 @@ sealed class ExploreState {
     object Loading : ExploreState()
 
     data class Error(val message: String? = null) : ExploreState()
-}
-
-
-/* todo remove */
-data class OldExploreState(
-    val geoList: GeoInfo? = null,
-    val categoryList: CategoryInfo? = null,
-    val searchedTopicsList: List<KeywordTopicInfo>? = null,
-    val searchedQueriesList: List<KeywordQueryInfo>? = null,
-    val isLoading: Boolean = false,
-    val error: String? = null
-) {
-
-    fun atLeastFilterDataIsAvailable() =
-        geoList != null
-                && categoryList != null
-
-    fun onlyFilterDataIsAvailable() =
-        atLeastFilterDataIsAvailable()
-                && searchedTopicsList == null
-                && searchedQueriesList == null
-
-    fun areAllScreenDataAvailable() =
-        geoList != null
-                && categoryList != null
-                && searchedTopicsList != null
-                && searchedQueriesList != null
-
-    fun attemptHidingLoading(): OldExploreState {
-        return if (
-            ((geoList != null
-                    && categoryList != null
-                    && searchedTopicsList != null
-                    && searchedQueriesList != null) || error != null)
-        ) this.copy(
-            isLoading = false
-        ) else this
-    }
-
 }
 
