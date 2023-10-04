@@ -19,6 +19,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -37,10 +40,12 @@ class ExploreViewModel @Inject constructor(
         MutableStateFlow<ExploreStateHolder>(ExploreStateHolder())
     val state = _state.asStateFlow()
 
-    private val _selectedFilters =
+    private val _selectedFiltersState =
         MutableStateFlow<MutableMap<String, FilterDialogItem>>(mutableMapOf())
-    val selectedFilters: StateFlow<Map<String, FilterDialogItem>> = _selectedFilters
+    val selectedFiltersState: StateFlow<Map<String, FilterDialogItem>> = _selectedFiltersState
 
+    private val _searchKeywordState = MutableStateFlow("")
+    val searchKeywordState: StateFlow<String> = _searchKeywordState
 
     fun prepareFilters() {
         loadGeoList()
@@ -103,6 +108,7 @@ class ExploreViewModel @Inject constructor(
             ) {
                 // start collecting filter selection changes:
                 retrieveSelectedFilters()
+                collectFilterAndSearchKeywordChanges()
 
                 // Stop collecting changes to state here:
                 coroutineContext.job.cancel()
@@ -160,18 +166,62 @@ class ExploreViewModel @Inject constructor(
             } else {
                 it.fromBaseFilterMap().toMutableMap().let { selectedFiltersMap ->
 
-                    _selectedFilters.value = selectedFiltersMap
+                    // Read from persistent and store in a variable as a cache.
+                    _selectedFiltersState.value = selectedFiltersMap
 
-                    val queryParams = ExploreDetailParams.create(
-                        geoId = selectedFiltersMap[GeoInfo.key]?.id ?: "",
-                        dateId = selectedFiltersMap[SearchDateInfo.key]?.id ?: "",
-                        categoryId = selectedFiltersMap[CategoryInfo.key]?.id ?: "",
-                        searchTypeId = selectedFiltersMap[SearchTypeInfo.key]?.id ?: ""
-                    )
-                    loadSearches(queryParams)
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun updateSearchKeyword(value: String) {
+        _searchKeywordState.value = value
+    }
+
+    private fun observeSearchKeyword() {
+        println("trending-search: observeSearchKeyword")
+
+        searchKeywordState
+            .debounce(500)
+            .distinctUntilChanged()
+            .onEach {
+                println("trending-search: observeSearchKeyword oneach: ${it}")
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun searchKeywordFlow() = searchKeywordState
+        .debounce(1000)
+        .distinctUntilChanged()
+
+    /**
+     * Observes changes made to filter selection and search-keyword and sends request to server
+     * to update result-list accordingly.
+     **/
+    private fun collectFilterAndSearchKeywordChanges() {
+        combine(selectedFiltersState, searchKeywordFlow()) { selectedFiltersMap, searchKeyword ->
+            println("trending-search: combineFlows combine:")
+            generateQueryParams(selectedFiltersMap, searchKeyword)
+        }.distinctUntilChanged()
+            .onEach { queryParams ->
+                println("trending-search: combineFlows onEach:")
+                loadSearches(queryParams)
+            }.launchIn(viewModelScope)
+    }
+
+    private fun generateQueryParams(
+        selectedFiltersMap: Map<String, FilterDialogItem>,
+        searchKeyword: String
+    ): ExploreDetailParams {
+        // val selectedFiltersMap = selectedFilters.value
+
+        return ExploreDetailParams.create(
+            keyword = searchKeyword.ifBlank { null },
+            geoId = selectedFiltersMap[GeoInfo.key]?.id ?: "",
+            dateId = selectedFiltersMap[SearchDateInfo.key]?.id ?: "",
+            categoryId = selectedFiltersMap[CategoryInfo.key]?.id ?: "",
+            searchTypeId = selectedFiltersMap[SearchTypeInfo.key]?.id ?: ""
+        )
     }
 
     fun generateFilterDialogParentMap(

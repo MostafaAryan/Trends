@@ -67,13 +67,17 @@ fun ExploreRoute(
     }
 
     val stateHolder by viewModel.state.collectAsState()
+    val searchKeyword by viewModel.searchKeywordState.collectAsState()
+
     ExploreScreen(
         navController = navController,
         stateHolder = stateHolder,
         onTopAppBarAction,
         viewModel.generateFilterDialogParentMap(stateHolder),
         viewModel::storeSelectedFilters,
-        viewModel.selectedFilters.collectAsState()
+        viewModel.selectedFiltersState.collectAsState(),
+        searchKeyword,
+        viewModel::updateSearchKeyword
     )
 }
 
@@ -84,7 +88,9 @@ private fun ExploreScreen(
     onTopAppBarAction: SharedFlow<TrTopAppBarActions>,
     filterDialogParentMap: LinkedHashMap<String, FilterDialogItem>,
     storeSelectedFilters: (Map<String, FilterDialogItem>) -> Unit,
-    selectedFiltersMap: State<Map<String, FilterDialogItem>>
+    selectedFiltersMap: State<Map<String, FilterDialogItem>>,
+    searchKeyword: String,
+    updateSearchKeyword: (String) -> Unit
 ) {
 
     var showFilterDialog by remember { mutableStateOf(false) }
@@ -94,8 +100,6 @@ private fun ExploreScreen(
             else -> {}
         }
     }
-
-    var searchKeyword by remember { mutableStateOf("") }
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -158,7 +162,7 @@ private fun ExploreScreen(
                             //
                             TrTextField(
                                 value = searchKeyword,
-                                onValueChange = { searchKeyword = it },
+                                onValueChange = { updateSearchKeyword(it) },
                                 modifier = Modifier
                                     .padding(horizontal = 10.dp)
                                     .padding(top = 0.dp, bottom = 10.dp),
@@ -189,7 +193,7 @@ private fun ExploreScreen(
                                             modifier = Modifier
                                                 .padding(end = MaterialTheme.spacing.grid_2_5)
                                                 .clickable {
-                                                    searchKeyword = ""
+                                                    updateSearchKeyword("")
                                                 },
                                             tint = Color.LightGray
                                         )
