@@ -1,5 +1,7 @@
 package com.programmerofpersia.trends.explore
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -8,6 +10,8 @@ import com.programmerofpersia.trends.common.navigation.TrNavGraph
 import com.programmerofpersia.trends.common.navigation.TrNavScreen
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.TrTopAppBarState
+import com.programmerofpersia.trends.common.ui.icon.TrFilterAlt
+import com.programmerofpersia.trends.common.ui.icon.TrTravelExplore
 import kotlinx.coroutines.flow.SharedFlow
 
 sealed class ExploreGraphDestinations() : TrNavGraph {
@@ -17,6 +21,8 @@ sealed class ExploreGraphDestinations() : TrNavGraph {
             get() = "explore-graph"
         override val label: String
             get() = "Explore"
+        override val icon: ImageVector
+            get() = Icons.Outlined.TrTravelExplore
     }
 
     object ExploreScreen : ExploreGraphDestinations(), TrNavScreen {
@@ -24,8 +30,10 @@ sealed class ExploreGraphDestinations() : TrNavGraph {
             get() = "explore-screen"
         override val label: String
             get() = "Explore"
+        override val icon: ImageVector
+            get() = Icons.Outlined.TrTravelExplore /* todo: screen entity does not need an icon. */
         override val topAppBarState: TrTopAppBarState
-            get() = TrTopAppBarState(title = "Explore", endIcon = "Q")
+            get() = TrTopAppBarState(title = "Explore", endIcon = Icons.Outlined.TrFilterAlt)
     }
 }
 

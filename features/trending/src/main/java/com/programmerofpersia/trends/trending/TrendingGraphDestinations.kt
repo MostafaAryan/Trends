@@ -1,5 +1,7 @@
 package com.programmerofpersia.trends.trending
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -8,6 +10,8 @@ import com.programmerofpersia.trends.common.navigation.TrNavGraph
 import com.programmerofpersia.trends.common.navigation.TrNavScreen
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.TrTopAppBarState
+import com.programmerofpersia.trends.common.ui.icon.TrLanguage
+import com.programmerofpersia.trends.common.ui.icon.TrTrendingUp
 import kotlinx.coroutines.flow.SharedFlow
 
 sealed class TrendingGraphDestinations() : TrNavGraph {
@@ -17,6 +21,8 @@ sealed class TrendingGraphDestinations() : TrNavGraph {
             get() = "trending-now-graph"
         override val label: String
             get() = "Trending now"
+        override val icon: ImageVector
+            get() = Icons.Outlined.TrTrendingUp
     }
 
     object TrendingNowScreen : TrendingGraphDestinations(), TrNavScreen {
@@ -24,8 +30,13 @@ sealed class TrendingGraphDestinations() : TrNavGraph {
             get() = "trending-now-screen"
         override val label: String
             get() = "Trending now"
+        override val icon: ImageVector
+            get() = Icons.Outlined.TrTrendingUp /* todo : screen entity does not need an icon. */
         override val topAppBarState: TrTopAppBarState
-            get() = TrTopAppBarState(title = "Daily search trends", endIcon = "L")
+            get() = TrTopAppBarState(
+                title = "Daily search trends",
+                endIcon = Icons.Outlined.TrLanguage
+            )
     }
 
 }

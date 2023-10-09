@@ -98,7 +98,7 @@ fun Navigation() {
                         selected = currentDestination?.hierarchy?.any { it.route == navBarItem.route } == true,
                         icon = {
                             Icon(
-                                imageVector = Icons.Filled.KeyboardArrowUp,
+                                imageVector = navBarItem.icon,
                                 contentDescription = null
                             )
                         },
