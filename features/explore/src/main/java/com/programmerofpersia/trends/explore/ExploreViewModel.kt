@@ -56,9 +56,8 @@ class ExploreViewModel @Inject constructor(
 
     private fun loadGeoList() {
         viewModelScope.launch {
-            /* todo loading should correlate with other api calls */
             _state.update {
-                ExploreStateHolder().setState(ExploreState.Loading)
+                ExploreStateHolder().setState(ExploreState.Loading.FullScreen)
             }
 
             exploreRepository.loadGeoList().onEach { response ->
@@ -121,7 +120,7 @@ class ExploreViewModel @Inject constructor(
         viewModelScope.launch {
 
             _state.update {
-                it.copy().setState(ExploreState.Loading)
+                it.copy().setState(ExploreState.Loading.SearchField)
             }
 
             exploreRepository.loadSearches(queryParams).onEach { response ->

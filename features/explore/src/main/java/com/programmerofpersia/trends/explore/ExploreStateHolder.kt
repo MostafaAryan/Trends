@@ -7,7 +7,7 @@ import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordTo
 
 
 data class ExploreStateHolder private constructor(
-    private var exploreState: ExploreState = ExploreState.Loading,
+    private var exploreState: ExploreState = ExploreState.Loading.FullScreen,
     //
     private var _geoList: GeoInfo? = null,
     private var _categoryList: CategoryInfo? = null,
@@ -16,7 +16,7 @@ data class ExploreStateHolder private constructor(
     private var _searchedQueriesList: List<KeywordQueryInfo>? = null
 ) {
 
-    constructor() : this(ExploreState.Loading)
+    constructor() : this(ExploreState.Loading.FullScreen)
 
     val geoList: GeoInfo?
         get() = _geoList
@@ -87,7 +87,11 @@ sealed class ExploreState {
 
     }
 
-    object Loading : ExploreState()
+    sealed class Loading : ExploreState() {
+        object FullScreen : Loading()
+
+        object SearchField : Loading()
+    }
 
     data class Error(val message: String? = null) : ExploreState()
 }

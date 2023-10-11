@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -48,6 +49,7 @@ import com.programmerofpersia.trends.common.ui.ClickableChipGroup
 import com.programmerofpersia.trends.common.ui.CollectAsEffect
 import com.programmerofpersia.trends.common.ui.FilterDialog
 import com.programmerofpersia.trends.common.ui.FilterDialogItem
+import com.programmerofpersia.trends.common.ui.TrProgressIndicator
 import com.programmerofpersia.trends.common.ui.TrTextField
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.theme.spacing
@@ -105,25 +107,16 @@ private fun ExploreScreen(
     Box(modifier = Modifier.fillMaxSize()) {
 
         // State - Loading
-        if (stateHolder.currentState() is ExploreState.Loading) {
-            /* todo improve loading and centralize it across different screens. */
-            Card(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
-            ) {
-                CircularProgressIndicator(Modifier.padding(all = MaterialTheme.spacing.grid_3))
-            }
+        if (stateHolder.currentState() is ExploreState.Loading.FullScreen) {
+            TrProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
 
         // State - Success
-        if (stateHolder.currentState() is ExploreState.Success.AllScreenDataIsAvailable &&
-            (stateHolder.currentState() !is ExploreState.Loading)
-        ) {
+        val lazyListState = rememberLazyListState()
 
-            val lazyListState = rememberLazyListState()
+        Column(modifier = Modifier.fillMaxSize()) {
 
-            Column(modifier = Modifier.fillMaxSize()) {
+            if (stateHolder.atLeastFilterDataIsAvailable()) {
 
                 var displayChipsContainer by rememberSaveable { mutableStateOf(false) }
                 val firstVisibleItemIndex by remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }
@@ -186,7 +179,15 @@ private fun ExploreScreen(
                                     )
                                 },
                                 trailingIcon = {
-                                    if (searchKeyword.isNotEmpty())
+                                    if (stateHolder.currentState() is ExploreState.Loading.SearchField) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier
+                                                .padding(end = MaterialTheme.spacing.grid_2)
+                                                .then(Modifier.size(20.dp)),
+                                            color = Color.White,
+                                            strokeWidth = 2.dp
+                                        )
+                                    } else if (searchKeyword.isNotEmpty())
                                         Icon(
                                             imageVector = Icons.Filled.Close,
                                             contentDescription = "Clear search.",
@@ -199,9 +200,9 @@ private fun ExploreScreen(
                                         )
                                 },
                                 /*contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
-                                    top = 0.dp,
-                                    bottom = 0.dp
-                                )*/
+                                top = 0.dp,
+                                bottom = 0.dp
+                            )*/
                             )
 
                         }
@@ -226,20 +227,27 @@ private fun ExploreScreen(
                 }
 
                 // List
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, false),
-                    state = lazyListState
+                if (stateHolder.currentState() is ExploreState.Success.AllScreenDataIsAvailable &&
+                    (stateHolder.currentState() !is ExploreState.Loading)
                 ) {
-                    when (selectedTabIndex) {
-                        0 -> searchedTopicsItems(stateHolder.searchedTopicsList!!)
-                        1 -> searchedQueriesItems(stateHolder.searchedQueriesList!!)
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f, false),
+                        state = lazyListState
+                    ) {
+                        when (selectedTabIndex) {
+                            0 -> searchedTopicsItems(stateHolder.searchedTopicsList!!)
+                            1 -> searchedQueriesItems(stateHolder.searchedQueriesList!!)
+                        }
                     }
+
                 }
+
             }
 
         }
+
 
         // State - Error (todo implement error screen)
         if (stateHolder.currentState() is ExploreState.Error) {

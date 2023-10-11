@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,6 +51,7 @@ import coil.compose.AsyncImage
 import com.programmerofpersia.trends.common.ui.ClickableChipGroup
 import com.programmerofpersia.trends.common.ui.CollectAsEffect
 import com.programmerofpersia.trends.common.ui.TrItemPickerAlertDialog
+import com.programmerofpersia.trends.common.ui.TrProgressIndicator
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItem
 import com.programmerofpersia.trends.common.ui.model.mapper.toItemPickerItemList
@@ -197,7 +197,7 @@ private fun TrendingScreen(
 
         }
         if (state.isLoading) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
+            TrProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
 
         if (showCountrySelectionDialog) {
