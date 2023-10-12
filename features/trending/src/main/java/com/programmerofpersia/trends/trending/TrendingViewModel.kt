@@ -90,7 +90,7 @@ class TrendingViewModel @Inject constructor(
     /* todo : Should move function to splashScreen*/
     /**
      * Calls Google Trends base url and receives necessary cookies in order to work with
-     * explore-details API.
+     * [com.programmerofpersia.trends.data.remote.TrApi.fetchExploreDetails] API.
      * */
     fun initializeNecessaryCookies() {
         viewModelScope.launch { trendingRepository.loadCookiesFromGoogleTrends() }
