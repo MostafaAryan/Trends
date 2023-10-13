@@ -73,6 +73,10 @@ data class ExploreStateHolder private constructor(
 }
 
 sealed class ExploreState {
+
+    /**
+     *  Success State:
+     **/
     sealed class Success : ExploreState() {
 
         data class OnlyFilterDataIsAvailable(
@@ -87,12 +91,18 @@ sealed class ExploreState {
 
     }
 
+    /**
+     *  Loading State:
+     **/
     sealed class Loading : ExploreState() {
         object FullScreen : Loading()
 
         object SearchField : Loading()
     }
 
+    /**
+     *  Error State:
+     **/
     data class Error(val message: String? = null) : ExploreState()
 }
 
