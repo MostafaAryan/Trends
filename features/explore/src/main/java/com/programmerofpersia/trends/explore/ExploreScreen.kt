@@ -47,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.programmerofpersia.trends.common.ui.ClickableChipGroup
 import com.programmerofpersia.trends.common.ui.CollectAsEffect
+import com.programmerofpersia.trends.common.ui.ErrorView
 import com.programmerofpersia.trends.common.ui.FilterDialog
 import com.programmerofpersia.trends.common.ui.FilterDialogItem
 import com.programmerofpersia.trends.common.ui.TrProgressIndicator
@@ -209,6 +210,14 @@ private fun ExploreScreen(
                     }
                 }
 
+
+            }
+
+            // Tabs and List
+            if (stateHolder.currentState() is ExploreState.Success.AllScreenDataIsAvailable &&
+                (stateHolder.currentState() !is ExploreState.Loading)
+            ) {
+
                 var selectedTabIndex by remember { mutableStateOf(0) }
                 val tabList = listOf(
                     "Search topics",
@@ -227,32 +236,27 @@ private fun ExploreScreen(
                 }
 
                 // List
-                if (stateHolder.currentState() is ExploreState.Success.AllScreenDataIsAvailable &&
-                    (stateHolder.currentState() !is ExploreState.Loading)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, false),
+                    state = lazyListState
                 ) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, false),
-                        state = lazyListState
-                    ) {
-                        when (selectedTabIndex) {
-                            0 -> searchedTopicsItems(stateHolder.searchedTopicsList!!)
-                            1 -> searchedQueriesItems(stateHolder.searchedQueriesList!!)
-                        }
+                    when (selectedTabIndex) {
+                        0 -> searchedTopicsItems(stateHolder.searchedTopicsList!!)
+                        1 -> searchedQueriesItems(stateHolder.searchedQueriesList!!)
                     }
-
                 }
 
+            } else if (stateHolder.currentState() is ExploreState.Error) {
+                // State - Error
+                ErrorView(
+                    message = (stateHolder.currentState() as ExploreState.Error).message ?: ""
+                )
             }
 
         }
 
-
-        // State - Error (todo implement error screen)
-        if (stateHolder.currentState() is ExploreState.Error) {
-            Text(text = (stateHolder.currentState() as ExploreState.Error).message ?: "")
-        }
 
         if (stateHolder.atLeastFilterDataIsAvailable() && showFilterDialog) {
             FilterDialog(
