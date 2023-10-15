@@ -1,6 +1,7 @@
 package com.programmerofpersia.trends.data.domain.repository
 
 import com.programmerofpersia.trends.data.domain.model.explore.CategoryInfo
+import com.programmerofpersia.trends.data.domain.model.explore.GeoAndCategoryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.GeoInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordInfo
 import com.programmerofpersia.trends.data.domain.model.request.ExploreDetailParams
@@ -13,6 +14,7 @@ import com.programmerofpersia.trends.data.remote.model.mappers.toCategoryInfo
 import com.programmerofpersia.trends.data.remote.model.mappers.toGeoInfo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -24,6 +26,7 @@ class ExploreRepositoryImpl(
     override val apiExecutor: ApiExecutor
 ) : ExploreRepository {
 
+    @Deprecated("This function is deprecated.")
     override fun loadGeoList(): Flow<TrResponse<GeoInfo>> = flow {
         emitApiResponse {
             trApi.fetchGeoList()
@@ -36,6 +39,7 @@ class ExploreRepositoryImpl(
         }
     }
 
+    @Deprecated("This function is deprecated.")
     override fun loadCategoryList(): Flow<TrResponse<CategoryInfo>> = flow {
         emitApiResponse {
             trApi.fetchCategoryList()
@@ -46,6 +50,50 @@ class ExploreRepositoryImpl(
             is TrResponse.Success -> TrResponse.Success(trResponse.result?.toCategoryInfo())
             is TrResponse.Error -> TrResponse.Error(trResponse.message)
         }
+    }
+
+    override fun loadGeoAndCategoryLists(): Flow<TrResponse<GeoAndCategoryInfo>> = flow<TrResponse<GeoAndCategoryInfo>> {
+
+        coroutineScope {
+            val geoList = async {
+                callApi {
+                    trApi.fetchGeoList()
+                }
+            }
+            delay(100)
+            val categoryList = async {
+                callApi {
+                    trApi.fetchCategoryList()
+                }
+            }
+
+            val geoListResult = geoList.await()
+            val categoryListResult = categoryList.await()
+
+            val response = if(geoListResult is TrResponse.Success &&
+                categoryListResult is TrResponse.Success &&
+                geoListResult.result != null &&
+                categoryListResult.result != null) {
+
+                TrResponse.Success(
+                    GeoAndCategoryInfo(
+                        geoListResult.result.toGeoInfo(),
+                        categoryListResult.result.toCategoryInfo()
+                    )
+                )
+
+            } else {
+                var errorMessage = "Geo and Category error."
+                if (geoListResult is TrResponse.Error)
+                    errorMessage = "$errorMessage ${geoListResult.message}."
+                if (categoryListResult is TrResponse.Error)
+                    errorMessage = "$errorMessage ${categoryListResult.message}."
+                TrResponse.Error(errorMessage)
+            }
+
+            emit(response)
+        }
+
     }
 
     override fun loadSearches(queryParams : ExploreDetailParams): Flow<TrResponse<KeywordInfo>> = flow {

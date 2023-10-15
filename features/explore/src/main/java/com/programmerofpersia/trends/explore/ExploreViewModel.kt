@@ -48,12 +48,12 @@ class ExploreViewModel @Inject constructor(
     val searchKeywordState: StateFlow<String> = _searchKeywordState
 
     fun prepareFilters() {
-        loadGeoList()
-        loadCategoryList()
+        loadGeoAndCategoryList()
 
         observeAndFinalizeFilters()
     }
 
+    @Deprecated("This function is deprecated.")
     private fun loadGeoList() {
         viewModelScope.launch {
             _state.update {
@@ -80,6 +80,7 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
+    @Deprecated("This function is deprecated.")
     private fun loadCategoryList() {
         viewModelScope.launch {
             exploreRepository.loadCategoryList().onEach { response ->
@@ -93,6 +94,26 @@ class ExploreViewModel @Inject constructor(
                         )
                     }
 
+                    is TrResponse.Error -> _state.update {
+                        it.copy().setState(ExploreState.Error(response.message))
+                    }
+                }
+            }.collect()
+        }
+    }
+
+    private fun loadGeoAndCategoryList() {
+        viewModelScope.launch {
+            exploreRepository.loadGeoAndCategoryLists().onEach {response ->
+                when (response) {
+                    is TrResponse.Success -> _state.update {
+                        it.copy().setState(
+                            ExploreState.Success.OnlyFilterDataIsAvailable(
+                                geo = response.result?.geoInfo,
+                                category = response.result?.categoryInfo
+                            )
+                        )
+                    }
                     is TrResponse.Error -> _state.update {
                         it.copy().setState(ExploreState.Error(response.message))
                     }
