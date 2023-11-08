@@ -1,4 +1,4 @@
-package com.programmerofpersia.trends.trending
+package com.programmerofpersia.trends.trending.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +9,7 @@ import com.programmerofpersia.trends.data.datastore.LocationStorage
 import com.programmerofpersia.trends.data.domain.TrendsLocation
 import com.programmerofpersia.trends.data.domain.repository.TrendingRepository
 import com.programmerofpersia.trends.data.remote.model.TrResponse
+import com.programmerofpersia.trends.trending.screenstate.TrendingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

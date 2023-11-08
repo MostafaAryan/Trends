@@ -1,4 +1,4 @@
-package com.programmerofpersia.trends.explore
+package com.programmerofpersia.trends.explore.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +14,8 @@ import com.programmerofpersia.trends.data.domain.model.explore.SearchTypeInfo
 import com.programmerofpersia.trends.data.domain.model.request.ExploreDetailParams
 import com.programmerofpersia.trends.data.domain.repository.ExploreRepository
 import com.programmerofpersia.trends.data.remote.model.TrResponse
+import com.programmerofpersia.trends.explore.screenstate.ExploreState
+import com.programmerofpersia.trends.explore.screenstate.ExploreStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

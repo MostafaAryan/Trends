@@ -1,4 +1,4 @@
-package com.programmerofpersia.trends.explore
+package com.programmerofpersia.trends.explore.screenstate
 
 import com.programmerofpersia.trends.data.domain.model.explore.CategoryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.GeoInfo

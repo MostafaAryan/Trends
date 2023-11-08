@@ -1,4 +1,4 @@
-package com.programmerofpersia.trends.trending
+package com.programmerofpersia.trends.trending.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

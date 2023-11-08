@@ -1,4 +1,4 @@
-package com.programmerofpersia.trends.explore
+package com.programmerofpersia.trends.explore.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -56,6 +56,9 @@ import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.theme.spacing
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordQueryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordTopicInfo
+import com.programmerofpersia.trends.explore.screenstate.ExploreState
+import com.programmerofpersia.trends.explore.screenstate.ExploreStateHolder
+import com.programmerofpersia.trends.explore.viewmodel.ExploreViewModel
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable

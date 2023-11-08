@@ -1,4 +1,4 @@
-package com.programmerofpersia.trends.trending
+package com.programmerofpersia.trends.trending.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -12,6 +12,7 @@ import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.TrTopAppBarState
 import com.programmerofpersia.trends.common.ui.icon.TrLanguage
 import com.programmerofpersia.trends.common.ui.icon.TrTrendingUp
+import com.programmerofpersia.trends.trending.screen.TrendingRoute
 import kotlinx.coroutines.flow.SharedFlow
 
 sealed class TrendingGraphDestinations() : TrNavGraph {

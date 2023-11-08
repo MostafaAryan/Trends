@@ -1,4 +1,4 @@
-package com.programmerofpersia.trends.explore
+package com.programmerofpersia.trends.explore.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -12,6 +12,7 @@ import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.TrTopAppBarState
 import com.programmerofpersia.trends.common.ui.icon.TrFilterAlt
 import com.programmerofpersia.trends.common.ui.icon.TrTravelExplore
+import com.programmerofpersia.trends.explore.screen.ExploreRoute
 import kotlinx.coroutines.flow.SharedFlow
 
 sealed class ExploreGraphDestinations() : TrNavGraph {

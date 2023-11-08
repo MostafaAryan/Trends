@@ -1,4 +1,4 @@
-package com.programmerofpersia.trends.trending
+package com.programmerofpersia.trends.trending.screenstate
 
 import com.programmerofpersia.trends.data.domain.model.DailyTrendsInfo
 
