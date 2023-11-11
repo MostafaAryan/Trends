@@ -122,9 +122,7 @@ private fun ExploreScreen(
 
             if (stateHolder.atLeastFilterDataIsAvailable()) {
 
-                var displayChipsContainer by rememberSaveable { mutableStateOf(false) }
-                val firstVisibleItemIndex by remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }
-                displayChipsContainer = firstVisibleItemIndex == 0
+                val displayChipsContainer by remember { derivedStateOf { lazyListState.firstVisibleItemIndex == 0 } }
 
                 // Chips & Search Container
                 AnimatedVisibility(visible = displayChipsContainer) {
