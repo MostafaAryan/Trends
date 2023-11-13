@@ -33,7 +33,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.programmerofpersia.trends.common.ui.ClickableChipGroup
 import com.programmerofpersia.trends.common.ui.CollectAsEffect
@@ -72,8 +72,8 @@ fun ExploreRoute(
         viewModel.prepareFilters()
     }
 
-    val stateHolder by viewModel.state.collectAsState()
-    val searchKeyword by viewModel.searchKeywordState.collectAsState()
+    val stateHolder by viewModel.state.collectAsStateWithLifecycle()
+    val searchKeyword by viewModel.searchKeywordState.collectAsStateWithLifecycle()
 
     ExploreScreen(
         navController = navController,

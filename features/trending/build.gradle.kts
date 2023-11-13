@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.navigation.compose)
     implementation(libs.constraintlayout.compose)
+    implementation(libs.lifecycle.runtime.compose)
 
     // Dagger-hilt
     implementation(libs.dagger.hilt.android)
