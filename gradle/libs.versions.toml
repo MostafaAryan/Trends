@@ -20,6 +20,7 @@ retrofitKotlinxSerializationJson = "1.0.0"
 okhttp = "4.10.0"
 kotlinx-serialization = "1.5.1"
 kotlinx-coroutines = "1.6.4"
+kotlinx-coroutines-test = "1.7.3"
 constraintlayout-compose = "1.0.1"
 lifecycle-runtime-compose = "2.6.1"
 coil = "2.4.0"
@@ -34,6 +35,7 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
