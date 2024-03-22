@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 
-class ExploreRepositoryImpl(
+internal class ExploreRepositoryImpl(
     private val trApi: TrApi,
     override val apiExecutor: ApiExecutor
 ) : ExploreRepository {

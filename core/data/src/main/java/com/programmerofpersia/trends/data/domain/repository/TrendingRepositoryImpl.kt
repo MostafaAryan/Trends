@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class TrendingRepositoryImpl(
+internal class TrendingRepositoryImpl(
     private val trApi: TrApi,
     override val apiExecutor: ApiExecutor
 ) : TrendingRepository {
