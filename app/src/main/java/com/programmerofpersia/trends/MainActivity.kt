@@ -5,8 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -31,10 +29,10 @@ import androidx.navigation.compose.rememberNavController
 import com.programmerofpersia.trends.common.ui.TrTopAppBar
 import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.TrTopAppBarState
-import com.programmerofpersia.trends.explore.ExploreGraphDestinations
-import com.programmerofpersia.trends.explore.exploreGraph
-import com.programmerofpersia.trends.trending.TrendingGraphDestinations
-import com.programmerofpersia.trends.trending.trendingGraph
+import com.programmerofpersia.trends.explore.navigation.ExploreGraphDestinations
+import com.programmerofpersia.trends.explore.navigation.exploreGraph
+import com.programmerofpersia.trends.trending.navigation.TrendingGraphDestinations
+import com.programmerofpersia.trends.trending.navigation.trendingGraph
 import com.programmerofpersia.trends.ui.theme.TrendsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableSharedFlow
