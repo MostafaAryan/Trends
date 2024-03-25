@@ -96,6 +96,65 @@ internal class ExploreRepositoryImpl(
 
     }
 
+    override fun loadRelatedSearches(
+        searchedTopicsToken : String,
+        searchedTopicsRequest : String,
+        searchedQueriesToken : String,
+        searchedQueriesRequest : String
+    ) : Flow<TrResponse<KeywordInfo>> = flow {
+
+        coroutineScope {
+            val searchedTopicsJob = async {
+                callApi {
+                    trApi.fetchSearchedKeywords(
+                        searchedTopicsRequest,
+                        searchedTopicsToken
+                    )
+                }
+            }
+            delay(100)
+            val searchedQueriesJob = async {
+                callApi {
+                    trApi.fetchSearchedKeywords(
+                        searchedQueriesRequest,
+                        searchedQueriesToken
+                    )
+                }
+            }
+
+            val searchedTopicsResult = searchedTopicsJob.await()
+            val searchedQueriesResult = searchedQueriesJob.await()
+
+            /* todo remove */
+            println("trending:resA: $searchedTopicsResult")
+            println("trending:resB: $searchedQueriesResult")
+
+            val response = if (searchedTopicsResult is TrResponse.Success
+                && searchedQueriesResult is TrResponse.Success
+                && !searchedTopicsResult.result?.default?.rankedList.isNullOrEmpty()
+                && !searchedQueriesResult.result?.default?.rankedList.isNullOrEmpty()
+            ) {
+                TrResponse.Success(
+                    KeywordMapper(
+                        searchedTopicsResult.result?.default?.rankedList!!,
+                        searchedQueriesResult.result?.default?.rankedList!!,
+                    ).map()
+                )
+            } else {
+                var errorMessage = "Search keyword error."
+                if (searchedTopicsResult is TrResponse.Error)
+                    errorMessage = "$errorMessage ${searchedTopicsResult.message}."
+                if (searchedQueriesResult is TrResponse.Error)
+                    errorMessage = "$errorMessage ${searchedQueriesResult.message}."
+                TrResponse.Error(errorMessage)
+            }
+
+            emit(response)
+        }
+
+    }
+
+    @Deprecated("This function is deprecated.")
     override fun loadSearches(queryParams : ExploreDetailParams): Flow<TrResponse<KeywordInfo>> = flow {
         var params : String? = null
         try {
@@ -135,6 +194,7 @@ internal class ExploreRepositoryImpl(
                             )
                         }
                     }
+                    delay(100)
                     val searchedQueriesJob = async {
                         callApi {
                             trApi.fetchSearchedKeywords(

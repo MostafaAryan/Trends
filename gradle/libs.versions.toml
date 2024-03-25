@@ -26,6 +26,9 @@ lifecycle-runtime-compose = "2.6.1"
 coil = "2.4.0"
 datastore="1.0.0"
 kotlinx-collections = "0.3.5"
+jsoup = "1.16.1"
+inspector-webview = "1.0.4"
+htmlunit = "3.7.0"
 
 
 [libraries]
@@ -63,6 +66,9 @@ ui-unit = { group = "androidx.compose.ui", name = "ui-unit"}
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections"}
+org-jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup"}
+inspector-webview = { group = "com.github.acsbendi", name = "Android-Request-Inspector-WebView", version.ref = "inspector-webview"}
+htmlunit-android = { group = "org.htmlunit", name = "htmlunit3-android", version.ref = "htmlunit"}
 
 
 [plugins]

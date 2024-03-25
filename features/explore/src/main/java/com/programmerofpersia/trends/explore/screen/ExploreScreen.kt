@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,6 +56,7 @@ import com.programmerofpersia.trends.common.ui.TrTopAppBarActions
 import com.programmerofpersia.trends.common.ui.theme.spacing
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordQueryInfo
 import com.programmerofpersia.trends.data.domain.model.explore.keyword.KeywordTopicInfo
+import com.programmerofpersia.trends.explore.model.RelatedSearchesPayload
 import com.programmerofpersia.trends.explore.screenstate.ExploreState
 import com.programmerofpersia.trends.explore.screenstate.ExploreStateHolder
 import com.programmerofpersia.trends.explore.viewmodel.ExploreViewModel
@@ -82,7 +84,9 @@ fun ExploreRoute(
         viewModel::storeSelectedFilters,
         viewModel.selectedFiltersState.collectAsStateWithLifecycle(),
         searchKeyword,
-        viewModel::updateSearchKeyword
+        viewModel::updateSearchKeyword,
+        viewModel.webViewUrlState.collectAsStateWithLifecycle(),
+        viewModel::loadRelatedSearches
     )
 }
 
@@ -95,7 +99,9 @@ private fun ExploreScreen(
     storeSelectedFilters: (Map<String, FilterDialogItem>) -> Unit,
     selectedFiltersMap: State<Map<String, FilterDialogItem>>,
     searchKeyword: String,
-    updateSearchKeyword: (String) -> Unit
+    updateSearchKeyword: (String) -> Unit,
+    webViewUrlState: State<String>,
+    loadTopic: (searchedTopicsPayload : RelatedSearchesPayload, searchedQueriesPayload : RelatedSearchesPayload) -> Unit,
 ) {
 
     var showFilterDialog by remember { mutableStateOf(false) }
@@ -108,6 +114,16 @@ private fun ExploreScreen(
 
 
     Box(modifier = Modifier.fillMaxSize()) {
+
+        // Hidden WebView
+        MyWebView(
+            LocalContext.current,
+            webViewUrlState.value,
+            loadTopic,
+            progressBar = { visible ->
+
+            }
+        )
 
         // State - Loading
         if (stateHolder.currentState() is ExploreState.Loading.FullScreen) {

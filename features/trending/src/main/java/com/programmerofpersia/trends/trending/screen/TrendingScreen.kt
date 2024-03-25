@@ -62,7 +62,6 @@ import com.programmerofpersia.trends.common.ui.theme.trTitleMedium
 import com.programmerofpersia.trends.common.ui.theme.trTitleSmall
 import com.programmerofpersia.trends.data.domain.TrendsLocation
 import com.programmerofpersia.trends.data.domain.model.TrendingSearchInfo
-import com.programmerofpersia.trends.data.remote.TrRemoteVariables
 import com.programmerofpersia.trends.trending.R
 import com.programmerofpersia.trends.trending.screenstate.TrendingState
 import com.programmerofpersia.trends.trending.viewmodel.TrendingViewModel

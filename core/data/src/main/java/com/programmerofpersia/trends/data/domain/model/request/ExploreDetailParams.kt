@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ExploreDetailParams private constructor(
     val comparisonItem: List<GeoAndTime>,
-    val category: String,
+    val category: Int,
     val property: String
 ) {
 
@@ -24,11 +24,22 @@ data class ExploreDetailParams private constructor(
             dateId: String,
             categoryId: String,
             searchTypeId: String,
-        ) = ExploreDetailParams(
-            listOf(GeoAndTime(keyword, geoId, dateId)),
-            categoryId,
-            searchTypeId
-        )
+        ): ExploreDetailParams {
+
+            val categoryIdAsInt = try {
+                categoryId.toInt()
+            } catch (e: NumberFormatException) {
+                e.printStackTrace()
+                0
+            }
+
+            return ExploreDetailParams(
+                listOf(GeoAndTime(keyword, geoId, dateId)),
+                categoryIdAsInt,
+                searchTypeId
+            )
+
+        }
     }
 
 

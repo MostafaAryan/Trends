@@ -1,5 +1,6 @@
 package com.programmerofpersia.trends.explore.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programmerofpersia.trends.common.ui.FilterDialogItem
@@ -14,6 +15,7 @@ import com.programmerofpersia.trends.data.domain.model.explore.SearchTypeInfo
 import com.programmerofpersia.trends.data.domain.model.request.ExploreDetailParams
 import com.programmerofpersia.trends.data.domain.repository.ExploreRepository
 import com.programmerofpersia.trends.data.remote.model.TrResponse
+import com.programmerofpersia.trends.explore.model.RelatedSearchesPayload
 import com.programmerofpersia.trends.explore.screenstate.ExploreState
 import com.programmerofpersia.trends.explore.screenstate.ExploreStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,6 +50,9 @@ class ExploreViewModel @Inject constructor(
 
     private val _searchKeywordState = MutableStateFlow("")
     val searchKeywordState: StateFlow<String> = _searchKeywordState
+
+    private val _webViewUrlState = MutableStateFlow("")
+    val webViewUrlState: StateFlow<String> = _webViewUrlState
 
     fun prepareFilters() {
         loadGeoAndCategoryList()
@@ -106,7 +111,7 @@ class ExploreViewModel @Inject constructor(
 
     private fun loadGeoAndCategoryList() {
         viewModelScope.launch {
-            exploreRepository.loadGeoAndCategoryLists().onEach {response ->
+            exploreRepository.loadGeoAndCategoryLists().onEach { response ->
                 when (response) {
                     is TrResponse.Success -> _state.update {
                         it.copy().setState(
@@ -138,6 +143,7 @@ class ExploreViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    @Deprecated("Use 'loadRelatedSearches()' instead")
     private fun loadSearches(queryParams: ExploreDetailParams) {
 
         viewModelScope.launch {
@@ -155,6 +161,45 @@ class ExploreViewModel @Inject constructor(
                             searchedQueriesList = response.result?.queryList,
                             error = null
                         ).attemptHidingLoading()*/
+
+                        it.copy().setState(
+                            ExploreState.Success.AllScreenDataIsAvailable(
+                                searchedTopics = response.result?.topicList,
+                                searchedQueries = response.result?.queryList,
+                            )
+                        )
+
+                    }
+
+                    is TrResponse.Error -> _state.update {
+                        it.copy().setState(ExploreState.Error(response.message))
+                    }
+                }
+
+            }.collect()
+        }
+    }
+
+    fun loadRelatedSearches(
+        searchedTopicsPayload: RelatedSearchesPayload,
+        searchedQueriesPayload: RelatedSearchesPayload
+    ) {
+
+        viewModelScope.launch {
+
+            _state.update {
+                it.copy().setState(ExploreState.Loading.SearchField)
+            }
+
+            exploreRepository.loadRelatedSearches(
+                searchedTopicsPayload.token,
+                searchedTopicsPayload.request,
+                searchedQueriesPayload.token,
+                searchedQueriesPayload.request,
+            ).onEach { response ->
+
+                when (response) {
+                    is TrResponse.Success -> _state.update {
 
                         it.copy().setState(
                             ExploreState.Success.AllScreenDataIsAvailable(
@@ -227,8 +272,23 @@ class ExploreViewModel @Inject constructor(
         }.distinctUntilChanged()
             .onEach { queryParams ->
                 println("trending-search: combineFlows onEach:")
-                loadSearches(queryParams)
+                // loadSearches(queryParams)
+                loadSearchesInWebView(queryParams)
             }.launchIn(viewModelScope)
+    }
+
+    private fun loadSearchesInWebView(queryParams: ExploreDetailParams) {
+        // todo handle empty string for params
+
+        _webViewUrlState.value = Uri.parse("https://trends.google.com/trends/explore")
+            .buildUpon()
+            .appendQueryParameter("q", queryParams.comparisonItem[0].keyword ?: "")
+            .appendQueryParameter("geo", queryParams.comparisonItem[0].geo)
+            .appendQueryParameter("date", queryParams.comparisonItem[0].time)
+            .appendQueryParameter("cat", queryParams.category.toString())
+            .appendQueryParameter("gprop", queryParams.property)
+            .appendQueryParameter("hl", "en")
+            .build().toString()
     }
 
     private fun generateQueryParams(

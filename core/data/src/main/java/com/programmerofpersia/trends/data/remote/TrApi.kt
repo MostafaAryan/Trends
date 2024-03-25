@@ -7,6 +7,7 @@ import com.programmerofpersia.trends.data.remote.model.response.ExploreDetailsRe
 import com.programmerofpersia.trends.data.remote.model.response.SearchedKeywordsResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Url
 
@@ -26,9 +27,11 @@ interface TrApi {
     @GET("${Constants.CATEGORY_LIST}?hl=en-US&tz=-210")
     suspend fun fetchCategoryList(): Response<CategoryDto>
 
-    @GET("${Constants.EXPLORE_DETAILS}?hl=en-US&tz=-210")
+    @POST("${Constants.EXPLORE_DETAILS}?hl=en-US&tz=-210")
     suspend fun fetchExploreDetails(
-        @Query("req") requestDetails: String
+        @Query("req") requestDetails: String,
+        @Query("tz") tz: String = "-210"
+        /*@Body body: String*/
     ): Response<ExploreDetailsResponse>
 
     @GET("${Constants.SEARCHED_KEYWORDS}?hl=en-US&tz=-210")

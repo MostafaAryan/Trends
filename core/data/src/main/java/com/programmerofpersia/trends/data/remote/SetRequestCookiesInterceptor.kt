@@ -11,10 +11,30 @@ class SetRequestCookiesInterceptor : Interceptor {
 
         println("trending: - request url to include cookie: ${chain.request().url}") /* todo remove */
 
-        if (chain.request().url.toString().contains(Constants.BASE_TRENDS_API_URL)) {
-            val cookies = TrRemoteVariables.googleCookies /* todo read from datastore */
+        /* This is the original code , todo remove*/
+        /*if (chain.request().url.toString().contains(Constants.BASE_TRENDS_API_URL)) {
+            val cookies = TrRemoteVariables.googleCookies *//* todo read from datastore *//*
             cookies.forEach {
                 requestBuilder.addHeader("Cookie", it)
+            }
+        }*/
+
+        // Try to use cookie from WebView, if not possible use Google API cookie.
+        if (chain.request().url.toString().contains(Constants.BASE_TRENDS_API_URL)) {
+            if (!TrRemoteVariables.webviewCookie.isNullOrEmpty()) {
+
+                val cookieString = TrRemoteVariables.webviewCookie
+                if (!cookieString.isNullOrEmpty()) {
+                    requestBuilder.addHeader("Cookie", cookieString)
+                }
+
+            } else {
+
+                val cookies = TrRemoteVariables.googleCookies
+                cookies.forEach {
+                    requestBuilder.addHeader("Cookie", it)
+                }
+
             }
         }
 

@@ -55,6 +55,10 @@ dependencies {
     kapt(libs.dagger.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    // Related to Webview and WebviewClient
+    implementation(libs.inspector.webview)
+    implementation("commons-io:commons-io:2.5")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
