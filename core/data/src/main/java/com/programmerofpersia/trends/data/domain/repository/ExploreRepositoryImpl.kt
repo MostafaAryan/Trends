@@ -52,56 +52,58 @@ internal class ExploreRepositoryImpl(
         }
     }
 
-    override fun loadGeoAndCategoryLists(): Flow<TrResponse<GeoAndCategoryInfo>> = flow<TrResponse<GeoAndCategoryInfo>> {
+    override fun loadGeoAndCategoryLists(): Flow<TrResponse<GeoAndCategoryInfo>> =
+        flow<TrResponse<GeoAndCategoryInfo>> {
 
-        coroutineScope {
-            val geoList = async {
-                callApi {
-                    trApi.fetchGeoList()
+            coroutineScope {
+                val geoList = async {
+                    callApi {
+                        trApi.fetchGeoList()
+                    }
                 }
-            }
-            delay(100)
-            val categoryList = async {
-                callApi {
-                    trApi.fetchCategoryList()
+                delay(100)
+                val categoryList = async {
+                    callApi {
+                        trApi.fetchCategoryList()
+                    }
                 }
-            }
 
-            val geoListResult = geoList.await()
-            val categoryListResult = categoryList.await()
+                val geoListResult = geoList.await()
+                val categoryListResult = categoryList.await()
 
-            val response = if(geoListResult is TrResponse.Success &&
-                categoryListResult is TrResponse.Success &&
-                geoListResult.result != null &&
-                categoryListResult.result != null) {
+                val response = if (geoListResult is TrResponse.Success &&
+                    categoryListResult is TrResponse.Success &&
+                    geoListResult.result != null &&
+                    categoryListResult.result != null
+                ) {
 
-                TrResponse.Success(
-                    GeoAndCategoryInfo(
-                        geoListResult.result.toGeoInfo(),
-                        categoryListResult.result.toCategoryInfo()
+                    TrResponse.Success(
+                        GeoAndCategoryInfo(
+                            geoListResult.result.toGeoInfo(),
+                            categoryListResult.result.toCategoryInfo()
+                        )
                     )
-                )
 
-            } else {
-                var errorMessage = "Geo and Category error."
-                if (geoListResult is TrResponse.Error)
-                    errorMessage = "$errorMessage ${geoListResult.message}."
-                if (categoryListResult is TrResponse.Error)
-                    errorMessage = "$errorMessage ${categoryListResult.message}."
-                TrResponse.Error(errorMessage)
+                } else {
+                    var errorMessage = "Geo and Category error."
+                    if (geoListResult is TrResponse.Error)
+                        errorMessage = "$errorMessage ${geoListResult.message}."
+                    if (categoryListResult is TrResponse.Error)
+                        errorMessage = "$errorMessage ${categoryListResult.message}."
+                    TrResponse.Error(errorMessage)
+                }
+
+                emit(response)
             }
 
-            emit(response)
         }
 
-    }
-
     override fun loadRelatedSearches(
-        searchedTopicsToken : String,
-        searchedTopicsRequest : String,
-        searchedQueriesToken : String,
-        searchedQueriesRequest : String
-    ) : Flow<TrResponse<KeywordInfo>> = flow {
+        searchedTopicsToken: String,
+        searchedTopicsRequest: String,
+        searchedQueriesToken: String,
+        searchedQueriesRequest: String
+    ): Flow<TrResponse<KeywordInfo>> = flow {
 
         coroutineScope {
             val searchedTopicsJob = async {
@@ -155,91 +157,92 @@ internal class ExploreRepositoryImpl(
     }
 
     @Deprecated("This function is deprecated.")
-    override fun loadSearches(queryParams : ExploreDetailParams): Flow<TrResponse<KeywordInfo>> = flow {
-        var params : String? = null
-        try {
-            params = Json.encodeToJsonElement(queryParams).toString()
-        } catch (e: Exception) {
-            TrResponse.Error("Params error: ${e.message}")
-        } finally {
-            if(!params.isNullOrEmpty()) {
-                emitApiResponse {
-                    trApi.fetchExploreDetails(params)
-                }
-            } else TrResponse.Error("Params error!")
-        }
-    }.map {
-        when (it) {
-            is TrResponse.Success -> {
-
-                val searchedTopicsWidget =
-                    it.result?.widgets?.firstOrNull { widget -> widget.id == WidgetDto.Type.RELATED_TOPICS.id }
-                val searchedQueriesWidget =
-                    it.result?.widgets?.firstOrNull { widget -> widget.id == WidgetDto.Type.RELATED_QUERIES.id }
-
-                /* todo remove */
-                println("trending:explore success")
-                println("trending:widgets: ${it.result?.widgets}")
-                println("trending:req: ${searchedTopicsWidget?.request}")
-
-                if (searchedTopicsWidget == null || searchedQueriesWidget == null)
-                    return@map TrResponse.Error("Explore result error.")
-
-                coroutineScope {
-                    val searchedTopicsJob = async {
-                        callApi {
-                            trApi.fetchSearchedKeywords(
-                                searchedTopicsWidget.request,
-                                searchedTopicsWidget.token
-                            )
-                        }
+    override fun loadSearches(queryParams: ExploreDetailParams): Flow<TrResponse<KeywordInfo>> =
+        flow {
+            var params: String? = null
+            try {
+                params = Json.encodeToJsonElement(queryParams).toString()
+            } catch (e: Exception) {
+                TrResponse.Error("Params error: ${e.message}")
+            } finally {
+                if (!params.isNullOrEmpty()) {
+                    emitApiResponse {
+                        trApi.fetchExploreDetails(params)
                     }
-                    delay(100)
-                    val searchedQueriesJob = async {
-                        callApi {
-                            trApi.fetchSearchedKeywords(
-                                searchedQueriesWidget.request,
-                                searchedQueriesWidget.token
-                            )
-                        }
-                    }
+                } else TrResponse.Error("Params error!")
+            }
+        }.map {
+            when (it) {
+                is TrResponse.Success -> {
 
-                    val searchedTopicsResult = searchedTopicsJob.await()
-                    val searchedQueriesResult = searchedQueriesJob.await()
+                    val searchedTopicsWidget =
+                        it.result?.widgets?.firstOrNull { widget -> widget.id == WidgetDto.Type.RELATED_TOPICS.id }
+                    val searchedQueriesWidget =
+                        it.result?.widgets?.firstOrNull { widget -> widget.id == WidgetDto.Type.RELATED_QUERIES.id }
 
                     /* todo remove */
-                    println("trending:resA: $searchedTopicsResult")
-                    println("trending:resB: $searchedQueriesResult")
+                    println("trending:explore success")
+                    println("trending:widgets: ${it.result?.widgets}")
+                    println("trending:req: ${searchedTopicsWidget?.request}")
 
-                    if (searchedTopicsResult is TrResponse.Success
-                        && searchedQueriesResult is TrResponse.Success
-                        && !searchedTopicsResult.result?.default?.rankedList.isNullOrEmpty()
-                        && !searchedQueriesResult.result?.default?.rankedList.isNullOrEmpty()
-                    ) {
-                        TrResponse.Success(
-                            KeywordMapper(
-                                searchedTopicsResult.result?.default?.rankedList!!,
-                                searchedQueriesResult.result?.default?.rankedList!!,
-                            ).map()
-                        )
-                    } else {
-                        var errorMessage = "Search keyword error."
-                        if (searchedTopicsResult is TrResponse.Error)
-                            errorMessage = "$errorMessage ${searchedTopicsResult.message}."
-                        if (searchedQueriesResult is TrResponse.Error)
-                            errorMessage = "$errorMessage ${searchedQueriesResult.message}."
-                        TrResponse.Error(errorMessage)
+                    if (searchedTopicsWidget == null || searchedQueriesWidget == null)
+                        return@map TrResponse.Error("Explore result error.")
+
+                    coroutineScope {
+                        val searchedTopicsJob = async {
+                            callApi {
+                                trApi.fetchSearchedKeywords(
+                                    searchedTopicsWidget.request,
+                                    searchedTopicsWidget.token
+                                )
+                            }
+                        }
+                        delay(100)
+                        val searchedQueriesJob = async {
+                            callApi {
+                                trApi.fetchSearchedKeywords(
+                                    searchedQueriesWidget.request,
+                                    searchedQueriesWidget.token
+                                )
+                            }
+                        }
+
+                        val searchedTopicsResult = searchedTopicsJob.await()
+                        val searchedQueriesResult = searchedQueriesJob.await()
+
+                        /* todo remove */
+                        println("trending:resA: $searchedTopicsResult")
+                        println("trending:resB: $searchedQueriesResult")
+
+                        if (searchedTopicsResult is TrResponse.Success
+                            && searchedQueriesResult is TrResponse.Success
+                            && !searchedTopicsResult.result?.default?.rankedList.isNullOrEmpty()
+                            && !searchedQueriesResult.result?.default?.rankedList.isNullOrEmpty()
+                        ) {
+                            TrResponse.Success(
+                                KeywordMapper(
+                                    searchedTopicsResult.result?.default?.rankedList!!,
+                                    searchedQueriesResult.result?.default?.rankedList!!,
+                                ).map()
+                            )
+                        } else {
+                            var errorMessage = "Search keyword error."
+                            if (searchedTopicsResult is TrResponse.Error)
+                                errorMessage = "$errorMessage ${searchedTopicsResult.message}."
+                            if (searchedQueriesResult is TrResponse.Error)
+                                errorMessage = "$errorMessage ${searchedQueriesResult.message}."
+                            TrResponse.Error(errorMessage)
+                        }
+
                     }
+                }
 
+                is TrResponse.Error -> {
+                    println("trending:explore error: ${it.message}") /*todo remove*/
+
+                    it
                 }
             }
-
-            is TrResponse.Error -> {
-                println("trending:explore error: ${it.message}") /*todo remove*/
-
-                it
-            }
         }
-    }
 
 }
