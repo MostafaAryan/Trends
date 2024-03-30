@@ -10,6 +10,7 @@
 - Hilt
 - Coil
 - Retrofit
+- Kotlinx-serialization
 
 ## 🔬 Automated test
 - Junit
