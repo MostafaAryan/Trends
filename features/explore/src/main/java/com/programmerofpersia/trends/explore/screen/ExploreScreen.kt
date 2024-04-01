@@ -101,7 +101,7 @@ private fun ExploreScreen(
     searchKeyword: String,
     updateSearchKeyword: (String) -> Unit,
     webViewUrlState: State<String>,
-    loadTopic: (searchedTopicsPayload : RelatedSearchesPayload, searchedQueriesPayload : RelatedSearchesPayload) -> Unit,
+    loadTopic: (searchedTopicsPayload: RelatedSearchesPayload, searchedQueriesPayload: RelatedSearchesPayload) -> Unit,
 ) {
 
     var showFilterDialog by remember { mutableStateOf(false) }

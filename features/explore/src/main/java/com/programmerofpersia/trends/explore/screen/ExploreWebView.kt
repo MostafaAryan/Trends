@@ -30,8 +30,8 @@ import java.net.URL
 fun MyWebView(
     context: Context,
     webViewLoadUrl: String,
-    loadTopic: (searchedTopicsPayload : RelatedSearchesPayload, searchedQueriesPayload : RelatedSearchesPayload) -> Unit,
-    progressBar : (visible: Boolean) -> Unit
+    loadTopic: (searchedTopicsPayload: RelatedSearchesPayload, searchedQueriesPayload: RelatedSearchesPayload) -> Unit,
+    progressBar: (visible: Boolean) -> Unit
 ) {
 
 
@@ -53,15 +53,15 @@ fun MyWebView(
     }
 
 
-    var searchedTopicsPayload : RelatedSearchesPayload? by remember {
+    var searchedTopicsPayload: RelatedSearchesPayload? by remember {
         mutableStateOf(null)
     }
-    var searchedQueriesPayload : RelatedSearchesPayload? by remember {
+    var searchedQueriesPayload: RelatedSearchesPayload? by remember {
         mutableStateOf(null)
     }
 
     LaunchedEffect(key1 = searchedTopicsPayload, key2 = searchedQueriesPayload) {
-        if(searchedTopicsPayload != null && searchedQueriesPayload != null) {
+        if (searchedTopicsPayload != null && searchedQueriesPayload != null) {
             loadTopic(searchedTopicsPayload!!, searchedQueriesPayload!!)
             searchedTopicsPayload = null
             searchedQueriesPayload = null
